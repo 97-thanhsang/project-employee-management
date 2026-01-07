@@ -6,7 +6,33 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortBy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortOrder",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Filter",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -85,7 +111,33 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortBy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortOrder",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Filter",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -158,19 +210,45 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Employee.api.Controllers.EmployeeController",
+    "ContainingType": "Employee.api.Controllers.EmployeeMasterController",
     "Method": "GetAll",
-    "RelativePath": "api/Employee",
+    "RelativePath": "api/EmployeeMaster",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortBy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortOrder",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Filter",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Employee.api.Controllers.EmployeeController",
+    "ContainingType": "Employee.api.Controllers.EmployeeMasterController",
     "Method": "Post",
-    "RelativePath": "api/Employee",
+    "RelativePath": "api/EmployeeMaster",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -184,9 +262,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Employee.api.Controllers.EmployeeController",
+    "ContainingType": "Employee.api.Controllers.EmployeeMasterController",
     "Method": "GetById",
-    "RelativePath": "api/Employee/{id}",
+    "RelativePath": "api/EmployeeMaster/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -200,9 +278,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Employee.api.Controllers.EmployeeController",
+    "ContainingType": "Employee.api.Controllers.EmployeeMasterController",
     "Method": "Put",
-    "RelativePath": "api/Employee/{id}",
+    "RelativePath": "api/EmployeeMaster/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -221,9 +299,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Employee.api.Controllers.EmployeeController",
+    "ContainingType": "Employee.api.Controllers.EmployeeMasterController",
     "Method": "Delete",
-    "RelativePath": "api/Employee/{id}",
+    "RelativePath": "api/EmployeeMaster/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,

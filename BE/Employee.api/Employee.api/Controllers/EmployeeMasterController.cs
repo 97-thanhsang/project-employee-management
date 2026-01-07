@@ -1,6 +1,8 @@
+using Employee.api.Helpers;
 using Employee.api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 using Emp = Employee.api.Model.Employee;
 
 namespace Employee.api.Controllers
@@ -16,16 +18,41 @@ namespace Employee.api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryParameters queryParameters)
         {
             try
             {
-                var employees = await _context.Employees.ToListAsync();
-                return Ok(employees);
+                IQueryable<Emp> employees = _context.Employees;
+
+                // Filtering
+                if (!string.IsNullOrEmpty(queryParameters.Filter))
+                {
+                    employees = employees.Where(e => e.name.Contains(queryParameters.Filter));
+                }
+
+                // Sorting
+                if (!string.IsNullOrEmpty(queryParameters.SortBy))
+                {
+                    if (string.Equals(queryParameters.SortOrder, "desc", StringComparison.OrdinalIgnoreCase))
+                    {
+                        employees = employees.OrderBy($"{queryParameters.SortBy} descending");
+                    }
+                    else
+                    {
+                        employees = employees.OrderBy(queryParameters.SortBy);
+                    }
+                }
+
+                // Paging
+                var pagedEmployees = await employees.Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
+                                     .Take(queryParameters.PageSize)
+                                     .ToListAsync();
+
+                return Ok(new ApiResponse(200, pagedEmployees));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
         }
 
@@ -37,34 +64,30 @@ namespace Employee.api.Controllers
                 var employee = await _context.Employees.FindAsync(id);
                 if (employee == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }
-                return Ok(employee);
+                return Ok(new ApiResponse(200, employee));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Emp employee)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 employee.createDate = DateTime.UtcNow;
                 _context.Employees.Add(employee);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetById), new { id = employee.employeeId }, employee);
+                var response = new ApiResponse(201, employee);
+                return CreatedAtAction(nameof(GetById), new { id = employee.employeeId }, response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
         }
 
@@ -73,12 +96,7 @@ namespace Employee.api.Controllers
         {
             if (id != employee.employeeId)
             {
-                return BadRequest();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse(400, null, "Employee ID mismatch"));
             }
             
             employee.modifiedData = DateTime.UtcNow;
@@ -92,19 +110,19 @@ namespace Employee.api.Controllers
             {
                 if (!_context.Employees.Any(e => e.employeeId == id))
                 {
-                    return NotFound();
+                    return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }
                 else
                 {
                     throw;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
 
-            return NoContent();
+            return Ok(new ApiResponse(200, employee));
         }
 
         [HttpDelete("{id}")]
@@ -115,17 +133,17 @@ namespace Employee.api.Controllers
                 var employee = await _context.Employees.FindAsync(id);
                 if (employee == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }
 
                 _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
 
-                return NoContent();
+                return Ok(new ApiResponse(200, null, "Employee deleted successfully."));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
         }
     }

@@ -1,6 +1,8 @@
-﻿using Employee.api.Model;
+﻿using Employee.api.Helpers;
+using Employee.api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Employee.api.Controllers
 {
@@ -15,16 +17,41 @@ namespace Employee.api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryParameters queryParameters)
         {
             try
             {
-                var departments = await _context.Departments.ToListAsync();
-                return Ok(departments);
+                IQueryable<Department> departments = _context.Departments;
+
+                // Filtering
+                if (!string.IsNullOrEmpty(queryParameters.Filter))
+                {
+                    departments = departments.Where(d => d.departmentName.Contains(queryParameters.Filter));
+                }
+
+                // Sorting
+                if (!string.IsNullOrEmpty(queryParameters.SortBy))
+                {
+                    if (string.Equals(queryParameters.SortOrder, "desc", StringComparison.OrdinalIgnoreCase))
+                    {
+                        departments = departments.OrderBy($"{queryParameters.SortBy} descending");
+                    }
+                    else
+                    {
+                        departments = departments.OrderBy(queryParameters.SortBy);
+                    }
+                }
+
+                // Paging
+                var pagedDepartments = await departments.Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
+                                     .Take(queryParameters.PageSize)
+                                     .ToListAsync();
+
+                return Ok(new ApiResponse(200, pagedDepartments));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
         }
 
@@ -36,33 +63,29 @@ namespace Employee.api.Controllers
                 var department = await _context.Departments.FindAsync(id);
                 if (department == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }
-                return Ok(department);
+                return Ok(new ApiResponse(200, department));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Department department)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 _context.Departments.Add(department);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetById), new { id = department.departmentId }, department);
+                var response = new ApiResponse(201, department);
+                return CreatedAtAction(nameof(GetById), new { id = department.departmentId }, response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
         }
 
@@ -71,12 +94,7 @@ namespace Employee.api.Controllers
         {
             if (id != department.departmentId)
             {
-                return BadRequest();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse(400, null, "Department ID mismatch"));
             }
 
             _context.Entry(department).State = EntityState.Modified;
@@ -89,19 +107,19 @@ namespace Employee.api.Controllers
             {
                 if (!_context.Departments.Any(e => e.departmentId == id))
                 {
-                    return NotFound();
+                    return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }
                 else
                 {
                     throw;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
 
-            return NoContent();
+            return Ok(new ApiResponse(200, department));
         }
 
         [HttpDelete("{id}")]
@@ -112,17 +130,17 @@ namespace Employee.api.Controllers
                 var department = await _context.Departments.FindAsync(id);
                 if (department == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }
 
                 _context.Departments.Remove(department);
                 await _context.SaveChangesAsync();
 
-                return NoContent();
+                return Ok(new ApiResponse(200, null, "Department deleted successfully."));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
         }
     }
