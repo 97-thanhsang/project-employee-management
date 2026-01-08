@@ -92,4 +92,6 @@ E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.Linq.Dynamic.Core.dll
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\BCrypt.Net-Next.dll
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

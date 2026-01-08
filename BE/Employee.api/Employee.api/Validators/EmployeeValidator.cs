@@ -15,6 +15,14 @@ namespace Employee.api.Validators
             RuleFor(e => e.pincode).NotEmpty().Length(6);
             RuleFor(e => e.address).NotEmpty().MaximumLength(2000);
             RuleFor(e => e.designationId).NotEmpty();
+
+        // This rule applies only on create.
+        RuleFor(e => e.password).NotEmpty().MinimumLength(8).MaximumLength(100)
+            .When(e => e.employeeId == 0, ApplyConditionTo.CurrentValidator);
+
+        // This rule applies only on update.
+        RuleFor(e => e.password).MinimumLength(8).MaximumLength(100)
+            .When(e => e.employeeId != 0 && !string.IsNullOrEmpty(e.password), ApplyConditionTo.CurrentValidator);
         }
     }
 }

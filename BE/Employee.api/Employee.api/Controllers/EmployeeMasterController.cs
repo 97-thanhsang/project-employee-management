@@ -3,6 +3,7 @@ using Employee.api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using BCrypt.Net;
 using Emp = Employee.api.Model.Employee;
 
 namespace Employee.api.Controllers
@@ -80,8 +81,11 @@ namespace Employee.api.Controllers
             try
             {
                 employee.createDate = DateTime.UtcNow;
+                employee.password = BCrypt.Net.BCrypt.HashPassword(employee.password);
                 _context.Employees.Add(employee);
                 await _context.SaveChangesAsync();
+                
+                employee.password = string.Empty; // Don't return the hash
                 var response = new ApiResponse(201, employee);
                 return CreatedAtAction(nameof(GetById), new { id = employee.employeeId }, response);
             }
@@ -99,7 +103,24 @@ namespace Employee.api.Controllers
                 return BadRequest(new ApiResponse(400, null, "Employee ID mismatch"));
             }
             
+            var existingEmployee = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.employeeId == id);
+            if (existingEmployee == null)
+            {
+                return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
+            }
+
             employee.modifiedData = DateTime.UtcNow;
+            
+            // If a new password is provided, hash it. Otherwise, keep the existing one.
+            if (!string.IsNullOrEmpty(employee.password))
+            {
+                employee.password = BCrypt.Net.BCrypt.HashPassword(employee.password);
+            }
+            else
+            {
+                employee.password = existingEmployee.password;
+            }
+
             _context.Entry(employee).State = EntityState.Modified;
 
             try
@@ -121,7 +142,8 @@ namespace Employee.api.Controllers
             {
                 return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
-
+            
+            employee.password = string.Empty; // Don't return the hash
             return Ok(new ApiResponse(200, employee));
         }
 

@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "Employee.api.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Employee.api.Model.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Employee.api.Controllers.DepartmentMasterController",
     "Method": "GetAll",
     "RelativePath": "api/DepartmentMaster",

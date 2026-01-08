@@ -26,5 +26,7 @@ namespace Employee.api.Model
         public int designationId { get; set; } 
         public DateTime createDate { get; set; }
         public DateTime modifiedData { get; set; }
+        [Required, MaxLength(100)]
+        public string password { get; set; } = string.Empty;
     }
 }
