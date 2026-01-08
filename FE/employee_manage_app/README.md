@@ -1,32 +1,164 @@
-# EmployeeManageApp
+# Employee Management System - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+Angular 17+ Standalone Components with Signal-based State Management.
 
-## Development server
+## 📚 Documentation
 
-To start a local development server, run:
+**Start here:** [DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md)
 
+### Quick Links
+- **[PHASE_1_FINAL_SUMMARY.md](./PHASE_1_FINAL_SUMMARY.md)** - Project completion status
+- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - Quick start & API reference
+- **[PHASE_1_IMPLEMENTATION.md](./PHASE_1_IMPLEMENTATION.md)** - Complete implementation guide
+- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - Testing examples & instructions
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- Angular CLI 17+
+- Backend API running at `http://localhost:5000`
+
+### Installation & Running
 ```bash
-ng serve
+npm install
+ng serve --port 4201
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Navigate to `http://localhost:4201/`
 
-## Code scaffolding
+## 🏗️ Architecture
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+### Layered Design
+```
+UI Components (Standalone)
+    ↓ injects
+EmployeeStore (Signal-based State)
+    ↓ calls
+EmployeeService (HTTP/API Layer)
+    ↓
+Backend API (.NET 8.0)
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Key Features
+- ✅ Signal-based state management (no RxJS)
+- ✅ Type-safe (0% `any` usage)
+- ✅ OnPush change detection ready
+- ✅ Clean architecture & separation of concerns
+- ✅ Production-ready code
 
-```bash
-ng generate --help
+## 🎯 Phase 1: Core (COMPLETE ✅)
+
+### Completed
+- [x] Setup Interceptor (Auth)
+- [x] Setup Base Models (7 interfaces)
+- [x] EmployeeService (5 CRUD methods)
+- [x] EmployeeStore (8 actions, 7 signals)
+
+### File Structure
+```
+src/app/core/
+├── models/
+│   ├── api-response.model.ts
+│   ├── employee.model.ts
+│   ├── department.model.ts
+│   ├── designation.model.ts
+│   └── index.ts
+├── services/
+│   └── employee.service.ts
+└── store/
+    └── employee.store.ts
 ```
 
-## Building
+## 💡 Usage Example
+
+```typescript
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { EmployeeStore } from '@core/store/employee.store';
+
+@Component({
+  selector: 'app-employees',
+  standalone: true,
+  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div *ngIf="store.isLoading()">Loading...</div>
+    <div *ngIf="store.isError()">{{ store.error() }}</div>
+    <table *ngIf="store.hasEmployees()">
+      <tr *ngFor="let emp of store.employees()">
+        <td>{{ emp.name }}</td>
+      </tr>
+    </table>
+  `
+})
+export class EmployeesComponent implements OnInit {
+  store = inject(EmployeeStore);
+
+  ngOnInit() {
+    this.store.loadEmployees();
+  }
+}
+```
+
+## 📖 Store API
+
+### Read Signals
+```typescript
+store.employees()           // Employee[]
+store.isLoading()          // boolean
+store.error()              // string | null
+store.selectedEmployee()   // Employee | null
+```
+
+### Actions
+```typescript
+store.loadEmployees()
+store.addEmployee(payload)
+store.updateEmployee(id, payload)
+store.deleteEmployee(id)
+store.selectEmployee(emp)
+```
+
+## 🔄 Development Workflow
+
+### Common Tasks
+```bash
+# Start development server
+ng serve --port 4201
+
+# Build for production
+ng build --configuration production
+
+# Run tests
+ng test
+
+# Run linting
+ng lint
+```
+
+## 📚 Resources
+
+- **[Angular Documentation](https://angular.io)**
+- **[Angular Signals Guide](https://angular.io/guide/signals)**
+- **[Backend API Documentation](../../BE/Employee.api/backend_api_summary.md)**
+
+## 🐛 Troubleshooting
+
+See [QUICK_REFERENCE.md - Common Issues](./QUICK_REFERENCE.md#-common-issues)
+
+## 📝 Phase 2 (Upcoming)
+
+Next: Build UI Components
+- EmployeeListComponent
+- EmployeeDetailComponent
+- EmployeeFormComponent
+- DepartmentStore & Service
+- DesignationStore & Service
+
+## 📄 Further Help
+
+To get more help on the Angular CLI, use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
 To build the project run:
 
