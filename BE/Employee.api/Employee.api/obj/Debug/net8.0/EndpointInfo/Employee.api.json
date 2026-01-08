@@ -636,7 +636,7 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedData": {
+          "modifiedDate": {
             "type": "string",
             "format": "date-time"
           },

@@ -8,9 +8,12 @@ namespace Employee.api.Model
     public class Designation
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int designationId { get; set; }
-        public int departmentId { get; set; }
+        [Column("designationId")]
+        public int DesignationId { get; set; }
+        [Column("departmentId")]
+        public int DepartmentId { get; set; }
         [Required, MaxLength(50)]
-        public string designationName { get; set; } = string.Empty;
+        [Column("designationName")]
+        public string DesignationName { get; set; } = string.Empty;
     }
 }

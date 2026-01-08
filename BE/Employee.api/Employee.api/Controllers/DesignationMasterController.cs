@@ -2,6 +2,7 @@ using Employee.api.Helpers;
 using Employee.api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 
 namespace Employee.api.Controllers
@@ -26,7 +27,7 @@ namespace Employee.api.Controllers
                 // Filtering
                 if (!string.IsNullOrEmpty(queryParameters.Filter))
                 {
-                    designations = designations.Where(d => d.designationName.Contains(queryParameters.Filter));
+                    designations = designations.Where(d => d.DesignationName.Contains(queryParameters.Filter));
                 }
 
                 // Sorting
@@ -55,6 +56,7 @@ namespace Employee.api.Controllers
             }
         }
 
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -81,7 +83,7 @@ namespace Employee.api.Controllers
                 _context.Designations.Add(designation);
                 await _context.SaveChangesAsync();
                 var response = new ApiResponse(201, designation);
-                return CreatedAtAction(nameof(GetById), new { id = designation.designationId }, response);
+                return CreatedAtAction(nameof(GetById), new { id = designation.DesignationId }, response);
             }
             catch (Exception)
             {
@@ -92,7 +94,7 @@ namespace Employee.api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Designation designation)
         {
-            if (id != designation.designationId)
+            if (id != designation.DesignationId)
             {
                 return BadRequest(new ApiResponse(400, null, "Designation ID mismatch"));
             }
@@ -105,7 +107,7 @@ namespace Employee.api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Designations.Any(e => e.designationId == id))
+                if (!_context.Designations.Any(e => e.DesignationId == id))
                 {
                     return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }

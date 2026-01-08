@@ -8,25 +8,38 @@ namespace Employee.api.Model
     public class Employee
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int employeeId { get; set; }
+        [Column("employeeId")]
+        public int EmployeeId { get; set; }
         [Required, MaxLength(50)]
-        public string name { get; set; } = string.Empty;
+        [Column("name")]
+        public string Name { get; set; } = string.Empty;
         [Required, MaxLength(10),MinLength(10)]
-        public string contactNo { get; set; } = string.Empty;
+        [Column("contactNo")]
+        public string ContactNo { get; set; } = string.Empty;
         [Required, MaxLength(50)]
-        public string city { get; set; } = string.Empty;
-        public string email { get; set; } = string.Empty;
+        [Column("city")]
+        public string City { get; set; } = string.Empty;
+        [Column("email")]
+        public string Email { get; set; } = string.Empty;
         [Required, MaxLength(50)]
-        public string state { get; set; } = string.Empty;
+        [Column("state")]
+        public string State { get; set; } = string.Empty;
         [Required, MaxLength(6)]
-        public string pincode { get; set; } = string.Empty;
-        public string altContactNo { get; set; } = string.Empty;
+        [Column("pincode")]
+        public string Pincode { get; set; } = string.Empty;
+        [Column("altContactNo")]
+        public string AltContactNo { get; set; } = string.Empty;
         [Required, MaxLength(2000)]
-        public string address { get; set; } = string.Empty;
-        public int designationId { get; set; } 
-        public DateTime createDate { get; set; }
-        public DateTime modifiedData { get; set; }
+        [Column("address")]
+        public string Address { get; set; } = string.Empty;
+        [Column("designationId")]
+        public int DesignationId { get; set; } 
+        [Column("createDate")]
+        public DateTime CreateDate { get; set; }
+        [Column("modifiedDate")] // Correcting typo but keeping DB column name
+        public DateTime ModifiedDate { get; set; }
         [Required, MaxLength(100)]
-        public string password { get; set; } = string.Empty;
+        [Column("password")]
+        public string Password { get; set; } = string.Empty;
     }
 }

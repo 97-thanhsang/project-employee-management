@@ -27,9 +27,9 @@ namespace Employee.api.Controllers
         {
             try
             {
-                var employee = await _context.Employees.FirstOrDefaultAsync(e => e.email == request.email);
+                var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == request.email);
 
-                if (employee == null || !BCrypt.Net.BCrypt.Verify(request.password, employee.password))
+                if (employee == null || !BCrypt.Net.BCrypt.Verify(request.password, employee.Password))
                 {
                     return Unauthorized(new ApiResponse(401, null, "Invalid credentials.", ErrorCodes.Validation));
                 }
@@ -52,8 +52,8 @@ namespace Employee.api.Controllers
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, employee.employeeId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, employee.email),
+                new Claim(JwtRegisteredClaimNames.Sub, employee.EmployeeId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, employee.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

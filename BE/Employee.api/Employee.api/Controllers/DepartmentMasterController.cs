@@ -2,6 +2,7 @@
 using Employee.api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 
 namespace Employee.api.Controllers
@@ -26,7 +27,7 @@ namespace Employee.api.Controllers
                 // Filtering
                 if (!string.IsNullOrEmpty(queryParameters.Filter))
                 {
-                    departments = departments.Where(d => d.departmentName.Contains(queryParameters.Filter));
+                    departments = departments.Where(d => d.DepartmentName.Contains(queryParameters.Filter));
                 }
 
                 // Sorting
@@ -81,7 +82,7 @@ namespace Employee.api.Controllers
                 _context.Departments.Add(department);
                 await _context.SaveChangesAsync();
                 var response = new ApiResponse(201, department);
-                return CreatedAtAction(nameof(GetById), new { id = department.departmentId }, response);
+                return CreatedAtAction(nameof(GetById), new { id = department.DepartmentId }, response);
             }
             catch (Exception)
             {
@@ -92,7 +93,7 @@ namespace Employee.api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Department department)
         {
-            if (id != department.departmentId)
+            if (id != department.DepartmentId)
             {
                 return BadRequest(new ApiResponse(400, null, "Department ID mismatch"));
             }
@@ -105,7 +106,7 @@ namespace Employee.api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Departments.Any(e => e.departmentId == id))
+                if (!_context.Departments.Any(e => e.DepartmentId == id))
                 {
                     return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using BCrypt.Net;
 using Emp = Employee.api.Model.Employee;
+using System.Linq;
 
 namespace Employee.api.Controllers
 {
@@ -28,7 +29,7 @@ namespace Employee.api.Controllers
                 // Filtering
                 if (!string.IsNullOrEmpty(queryParameters.Filter))
                 {
-                    employees = employees.Where(e => e.name.Contains(queryParameters.Filter));
+                    employees = employees.Where(e => e.Name.Contains(queryParameters.Filter));
                 }
 
                 // Sorting
@@ -57,6 +58,7 @@ namespace Employee.api.Controllers
             }
         }
 
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -80,14 +82,14 @@ namespace Employee.api.Controllers
         {
             try
             {
-                employee.createDate = DateTime.UtcNow;
-                employee.password = BCrypt.Net.BCrypt.HashPassword(employee.password);
+                employee.CreateDate = DateTime.UtcNow;
+                employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
                 _context.Employees.Add(employee);
                 await _context.SaveChangesAsync();
                 
-                employee.password = string.Empty; // Don't return the hash
+                employee.Password = string.Empty; // Don't return the hash
                 var response = new ApiResponse(201, employee);
-                return CreatedAtAction(nameof(GetById), new { id = employee.employeeId }, response);
+                return CreatedAtAction(nameof(GetById), new { id = employee.EmployeeId }, response);
             }
             catch (Exception)
             {
@@ -98,27 +100,27 @@ namespace Employee.api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Emp employee)
         {
-            if (id != employee.employeeId)
+            if (id != employee.EmployeeId)
             {
                 return BadRequest(new ApiResponse(400, null, "Employee ID mismatch"));
             }
             
-            var existingEmployee = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.employeeId == id);
+            var existingEmployee = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.EmployeeId == id);
             if (existingEmployee == null)
             {
                 return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
             }
 
-            employee.modifiedData = DateTime.UtcNow;
+            employee.ModifiedDate = DateTime.UtcNow;
             
             // If a new password is provided, hash it. Otherwise, keep the existing one.
-            if (!string.IsNullOrEmpty(employee.password))
+            if (!string.IsNullOrEmpty(employee.Password))
             {
-                employee.password = BCrypt.Net.BCrypt.HashPassword(employee.password);
+                employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
             }
             else
             {
-                employee.password = existingEmployee.password;
+                employee.Password = existingEmployee.Password;
             }
 
             _context.Entry(employee).State = EntityState.Modified;
@@ -129,7 +131,7 @@ namespace Employee.api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Employees.Any(e => e.employeeId == id))
+                if (!_context.Employees.Any(e => e.EmployeeId == id))
                 {
                     return NotFound(new ApiResponse(404, null, ErrorMessages.NotFound, ErrorCodes.NotFound));
                 }
@@ -143,7 +145,7 @@ namespace Employee.api.Controllers
                 return StatusCode(500, new ApiResponse(500, null, ErrorMessages.InternalServerError, ErrorCodes.InternalServerError));
             }
             
-            employee.password = string.Empty; // Don't return the hash
+            employee.Password = string.Empty; // Don't return the hash
             return Ok(new ApiResponse(200, employee));
         }
 

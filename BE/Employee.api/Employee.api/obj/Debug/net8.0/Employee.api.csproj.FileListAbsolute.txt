@@ -8,6 +8,11 @@ E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Employee.api.pdb
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Azure.Core.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Azure.Identity.dll
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\BCrypt.Net-Next.dll
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\FluentValidation.dll
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Microsoft.Data.SqlClient.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
@@ -44,6 +49,7 @@ E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.Formats.Asn1.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.IO.Pipelines.dll
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.Linq.Dynamic.Core.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.Memory.Data.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.Runtime.Caching.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
@@ -82,16 +88,10 @@ E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Employee.api.props
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Employee.api.props
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\staticwebassets.pack.json
+E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\Employee.214C1456.Up2Date
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\Employee.api.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\refint\Employee.api.dll
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\Employee.api.pdb
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\Employee.api.genruntimeconfig.cache
 E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\ref\Employee.api.dll
-E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\FluentValidation.dll
-E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
-E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
-E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\System.Linq.Dynamic.Core.dll
-E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\BCrypt.Net-Next.dll
-E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-E:\SOURCE\project-employee-management\BE\Employee.api\Employee.api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

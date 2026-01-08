@@ -7,9 +7,12 @@ namespace Employee.api.Model
     public class Department
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int departmentId { get; set; }
+        [Column("departmentId")]
+        public int DepartmentId { get; set; }
         [Required,MaxLength(50)]
-        public string departmentName { get; set; } = string.Empty;
-        public bool isActive { get; set; }
+        [Column("departmentName")]
+        public string DepartmentName { get; set; } = string.Empty;
+        [Column("isActive")]
+        public bool IsActive { get; set; }
     }
 }

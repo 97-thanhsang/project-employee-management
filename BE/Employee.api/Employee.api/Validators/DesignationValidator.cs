@@ -7,8 +7,8 @@ namespace Employee.api.Validators
     {
         public DesignationValidator()
         {
-            RuleFor(d => d.designationName).NotEmpty().MaximumLength(50);
-            RuleFor(d => d.departmentId).NotEmpty();
+            RuleFor(d => d.DesignationName).NotEmpty().MaximumLength(50);
+            RuleFor(d => d.DepartmentId).NotEmpty();
         }
     }
 }
