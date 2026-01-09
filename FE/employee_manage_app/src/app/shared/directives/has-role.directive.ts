@@ -54,7 +54,7 @@ export class HasRoleDirective implements OnInit, OnDestroy {
    */
   private updateView(): void {
     if (!this.templateRef) return; // Exit if template ref not available
-    
+
     const hasPermission = this.authService.hasAnyRole(this.requiredRoles);
 
     if (hasPermission && !this.hasView) {
