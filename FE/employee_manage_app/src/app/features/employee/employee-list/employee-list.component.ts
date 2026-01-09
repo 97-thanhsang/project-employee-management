@@ -2,7 +2,7 @@ import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EmployeeStore } from '@core/store/employee.store';
-import { Employee } from '@core/models';
+import { Employee, Designation } from '@core/models';
 
 /**
  * EmployeeListComponent
@@ -14,6 +14,7 @@ import { Employee } from '@core/models';
  * - Hiển thị error message
  * - Action buttons (Edit, Delete)
  * - Responsive design (Bootstrap 5)
+ * - Display designation name instead of ID
  *
  * Change Detection: OnPush (performance optimization)
  */
@@ -31,6 +32,8 @@ export class EmployeeListComponent implements OnInit {
   ngOnInit(): void {
     // Load danh sách nhân viên khi component init
     this.store.loadEmployees();
+    // Load master data để có designations
+    this.store.loadMasterData();
   }
 
   /**
@@ -49,5 +52,27 @@ export class EmployeeListComponent implements OnInit {
    */
   onSelectEmployee(employee: Employee): void {
     this.store.selectEmployee(employee);
+  }
+
+  /**
+   * Get designation name from ID
+   * Helper method để tìm designation name based on designationId
+   * @param designationId Designation ID
+   * @returns Designation name hoặc 'N/A'
+   */
+  getDesignationName(designationId: number): string {
+    const designation = this.store.designations().find(d => d.designationId === designationId);
+    return designation ? designation.designationName : 'N/A';
+  }
+
+  /**
+   * Get department name from ID
+   * Helper method để tìm department name based on departmentId
+   * @param departmentId Department ID
+   * @returns Department name hoặc 'N/A'
+   */
+  getDepartmentName(departmentId: number): string {
+    const department = this.store.departments().find(d => d.departmentId === departmentId);
+    return department ? department.departmentName : 'N/A';
   }
 }

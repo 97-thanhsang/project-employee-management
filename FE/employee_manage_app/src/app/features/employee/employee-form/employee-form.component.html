@@ -1,0 +1,308 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <!-- Card Header -->
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">
+            {{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}
+          </h4>
+        </div>
+
+        <!-- Loading State -->
+        @if (store.isMasterDataLoading()) {
+          <div class="card-body text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading master data...</p>
+          </div>
+        }
+
+        <!-- Error State -->
+        @if (store.error()) {
+          <div class="alert alert-danger m-3">
+            <strong>Error:</strong> {{ store.error() }}
+            <button 
+              type="button" 
+              class="btn-close" 
+              (click)="store.clearError()">
+            </button>
+          </div>
+        }
+
+        <!-- Form -->
+        @if (!store.isMasterDataLoading()) {
+          <div class="card-body">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+              <!-- Row 1: Name & Email -->
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="name" class="form-label">
+                    Name <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    formControlName="name"
+                    [class.is-invalid]="hasError('name', 'required')"
+                    placeholder="Enter full name">
+                  @if (hasError('name', 'required')) {
+                    <div class="invalid-feedback">
+                      Name is required
+                    </div>
+                  }
+                  @if (hasError('name', 'minlength')) {
+                    <div class="invalid-feedback">
+                      Name must be at least 3 characters
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="email" class="form-label">
+                    Email <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    formControlName="email"
+                    [class.is-invalid]="hasError('email', 'required') || hasError('email', 'email')"
+                    placeholder="Enter email">
+                  @if (hasError('email', 'required')) {
+                    <div class="invalid-feedback">
+                      Email is required
+                    </div>
+                  }
+                  @if (hasError('email', 'email')) {
+                    <div class="invalid-feedback">
+                      Enter a valid email address
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Row 2: Phone & Salary -->
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="contactNo" class="form-label">
+                    Phone <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="contactNo"
+                    formControlName="contactNo"
+                    [class.is-invalid]="hasError('contactNo', 'required') || hasError('contactNo', 'pattern')"
+                    placeholder="10-digit phone number">
+                  @if (hasError('contactNo', 'required')) {
+                    <div class="invalid-feedback">
+                      Phone is required
+                    </div>
+                  }
+                  @if (hasError('contactNo', 'pattern')) {
+                    <div class="invalid-feedback">
+                      Phone must be 10 digits
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="salary" class="form-label">
+                    Salary <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="salary"
+                    formControlName="salary"
+                    [class.is-invalid]="hasError('salary', 'required')"
+                    placeholder="Enter salary">
+                  @if (hasError('salary', 'required')) {
+                    <div class="invalid-feedback">
+                      Salary is required
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Row 3: Department & Designation -->
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="departmentId" class="form-label">
+                    Department <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="departmentId"
+                    formControlName="departmentId"
+                    [class.is-invalid]="hasError('departmentId', 'required')">
+                    <option value="">-- Select Department --</option>
+                    @for (dept of store.departmentOptions(); track dept.id) {
+                      <option [value]="dept.id">{{ dept.name }}</option>
+                    }
+                  </select>
+                  @if (hasError('departmentId', 'required')) {
+                    <div class="invalid-feedback">
+                      Department is required
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="designationId" class="form-label">
+                    Designation <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="designationId"
+                    formControlName="designationId"
+                    [class.is-invalid]="hasError('designationId', 'required')">
+                    <option value="">-- Select Designation --</option>
+                    @for (des of store.designationOptions(); track des.id) {
+                      <option [value]="des.id">{{ des.name }}</option>
+                    }
+                  </select>
+                  @if (hasError('designationId', 'required')) {
+                    <div class="invalid-feedback">
+                      Designation is required
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Row 4: Address -->
+              <div class="mb-3">
+                <label for="address" class="form-label">
+                  Address <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  formControlName="address"
+                  [class.is-invalid]="hasError('address', 'required')"
+                  placeholder="Enter full address">
+                @if (hasError('address', 'required')) {
+                  <div class="invalid-feedback">
+                    Address is required
+                  </div>
+                }
+              </div>
+
+              <!-- Row 5: City, State, Pincode -->
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="city" class="form-label">
+                    City <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="city"
+                    formControlName="city"
+                    [class.is-invalid]="hasError('city', 'required')"
+                    placeholder="City">
+                  @if (hasError('city', 'required')) {
+                    <div class="invalid-feedback">
+                      City is required
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label for="state" class="form-label">
+                    State <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="state"
+                    formControlName="state"
+                    [class.is-invalid]="hasError('state', 'required')"
+                    placeholder="State">
+                  @if (hasError('state', 'required')) {
+                    <div class="invalid-feedback">
+                      State is required
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label for="pincode" class="form-label">
+                    Pincode <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="pincode"
+                    formControlName="pincode"
+                    [class.is-invalid]="hasError('pincode', 'required') || hasError('pincode', 'pattern')"
+                    placeholder="6-digit pincode">
+                  @if (hasError('pincode', 'required')) {
+                    <div class="invalid-feedback">
+                      Pincode is required
+                    </div>
+                  }
+                  @if (hasError('pincode', 'pattern')) {
+                    <div class="invalid-feedback">
+                      Pincode must be 6 digits
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Row 6: Password -->
+              <div class="mb-3">
+                <label for="password" class="form-label">
+                  Password <span class="text-danger">*</span>
+                  <small class="text-muted">{{ isEditMode ? '(Leave empty to keep current)' : '(Min 6 characters)' }}</small>
+                </label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  formControlName="password"
+                  [class.is-invalid]="hasError('password', 'required') || hasError('password', 'minlength')"
+                  placeholder="Enter password"
+                  [required]="!isEditMode">
+                @if (hasError('password', 'required')) {
+                  <div class="invalid-feedback">
+                    Password is required
+                  </div>
+                }
+                @if (hasError('password', 'minlength')) {
+                  <div class="invalid-feedback">
+                    Password must be at least 6 characters
+                  </div>
+                }
+              </div>
+
+              <!-- Form Actions -->
+              <div class="d-flex gap-2 mt-4">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="!form.valid || isSubmitting || store.isMasterDataLoading()">
+                  @if (isSubmitting) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                  }
+                  {{ isEditMode ? 'Update' : 'Create' }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="onCancel()"
+                  [disabled]="isSubmitting">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

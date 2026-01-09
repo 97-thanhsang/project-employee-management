@@ -7,8 +7,11 @@ import {
   Injector,
   runInInjectionContext
 } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { EmployeeService } from '../services/employee.service';
-import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest } from '../models';
+import { DepartmentService } from '../services/department.service';
+import { DesignationService } from '../services/designation.service';
+import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest, Department, Designation } from '../models';
 
 /**
  * State Interface
@@ -20,6 +23,9 @@ interface EmployeeState {
   error: string | null;
   selectedEmployee: Employee | null;
   totalCount: number; // Cho pagination
+  departments: Department[];
+  designations: Designation[];
+  masterDataLoading: boolean;
 }
 
 /**
@@ -61,6 +67,15 @@ export class EmployeeStore {
   /** Tổng số nhân viên (cho pagination) */
   private totalCountSignal: WritableSignal<number> = signal(0);
 
+  /** Danh sách phòng ban */
+  private departmentsSignal: WritableSignal<Department[]> = signal([]);
+
+  /** Danh sách chức danh */
+  private designationsSignal: WritableSignal<Designation[]> = signal([]);
+
+  /** Master data loading state */
+  private masterDataLoadingSignal: WritableSignal<boolean> = signal(false);
+
   // ============= DERIVED/COMPUTED SIGNALS (PUBLIC READ-ONLY) =============
 
   /**
@@ -90,6 +105,21 @@ export class EmployeeStore {
   readonly totalCount = computed(() => this.totalCountSignal());
 
   /**
+   * Expose read-only departments
+   */
+  readonly departments = computed(() => this.departmentsSignal());
+
+  /**
+   * Expose read-only designations
+   */
+  readonly designations = computed(() => this.designationsSignal());
+
+  /**
+   * Expose master data loading state
+   */
+  readonly isMasterDataLoading = computed(() => this.masterDataLoadingSignal());
+
+  /**
    * Computed signal để check xem có employee nào không
    */
   readonly hasEmployees = computed(() => this.employeesSignal().length > 0);
@@ -99,13 +129,71 @@ export class EmployeeStore {
    */
   readonly isError = computed(() => this.errorSignal() !== null);
 
+  /**
+   * Department options for dropdown (id, name)
+   */
+  readonly departmentOptions = computed(() => 
+    this.departmentsSignal().map(dept => ({
+      id: dept.departmentId,
+      name: dept.departmentName
+    }))
+  );
+
+  /**
+   * Designation options for dropdown (id, name)
+   */
+  readonly designationOptions = computed(() =>
+    this.designationsSignal().map(des => ({
+      id: des.designationId,
+      name: des.designationName
+    }))
+  );
+
   // ============= CONSTRUCTOR & INJECTOR CONTEXT =============
 
-  constructor(private employeeService: EmployeeService, private injector: Injector) {
+  constructor(
+    private employeeService: EmployeeService,
+    private departmentService: DepartmentService,
+    private designationService: DesignationService,
+    private injector: Injector
+  ) {
     // Có thể init effects ở đây nếu cần
   }
 
   // ============= ACTIONS / METHODS =============
+
+  /**
+   * Load Master Data (Departments + Designations) in parallel
+   * 
+   * Luồng xử lý:
+   * 1. Set masterDataLoading = true
+   * 2. Use forkJoin to call both APIs in parallel
+   * 3. If success -> update departments & designations signals
+   * 4. If error -> update error signal
+   * 5. Set masterDataLoading = false
+   */
+  loadMasterData(): void {
+    this.masterDataLoadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    forkJoin({
+      departments: this.departmentService.getAllDepartments(),
+      designations: this.designationService.getAllDesignations()
+    }).subscribe({
+      next: (result) => {
+        // Success: update state
+        this.departmentsSignal.set(result.departments.data || []);
+        this.designationsSignal.set(result.designations.data || []);
+        this.masterDataLoadingSignal.set(false);
+      },
+      error: (error) => {
+        // Error: update error signal
+        const errorMessage = error?.error?.message || 'Failed to load master data';
+        this.errorSignal.set(errorMessage);
+        this.masterDataLoadingSignal.set(false);
+      }
+    });
+  }
 
   /**
    * Load danh sách nhân viên từ API

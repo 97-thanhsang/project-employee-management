@@ -21,6 +21,7 @@ export interface Employee {
  * Employee Create Request (không có ID, timestamp)
  */
 export interface CreateEmployeeRequest {
+  employeeId: number;
   name: string;
   contactNo: string;
   email: string;
