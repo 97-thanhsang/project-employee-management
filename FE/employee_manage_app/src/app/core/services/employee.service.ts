@@ -2,12 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse, Employee, CreateEmployeeRequest, UpdateEmployeeRequest } from '../models';
-
-/**
- * API Configuration Constants
- * Lưu ý: Nên đặt vào environment file trong production
- */
-const API_BASE_URL = 'http://localhost:5000/api';
+import { environment } from '../../../environments/environment';
 
 /**
  * EmployeeService
@@ -24,7 +19,7 @@ const API_BASE_URL = 'http://localhost:5000/api';
   providedIn: 'root'
 })
 export class EmployeeService {
-  private readonly employeeEndpoint = `${API_BASE_URL}/EmployeeMaster`;
+  private readonly employeeEndpoint = `${environment.apiUrl}/EmployeeMaster`;
 
   constructor(private http: HttpClient) {}
 
