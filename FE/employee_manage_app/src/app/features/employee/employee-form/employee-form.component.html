@@ -23,9 +23,9 @@
         @if (store.error()) {
           <div class="alert alert-danger m-3">
             <strong>Error:</strong> {{ store.error() }}
-            <button 
-              type="button" 
-              class="btn-close" 
+            <button
+              type="button"
+              class="btn-close"
               (click)="store.clearError()">
             </button>
           </div>

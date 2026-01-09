@@ -99,12 +99,13 @@
                       </td>
                       <td>
                         <span class="badge bg-info">
-                          {{ getDesignationName(employee.designationId) }}
+                          {{ employee.designationId | designationName: store.designations() }}
                         </span>
                       </td>
                       <td class="text-center">
-                        <!-- Edit Button -->
+                        <!-- Edit Button (Only for Admin) -->
                         <a
+                          [appHasRole]="'Admin'"
                           [routerLink]="['/employees', employee.employeeId, 'edit']"
                           class="btn btn-sm btn-outline-primary"
                           title="Chỉnh sửa nhân viên"
@@ -112,9 +113,10 @@
                           <i class="bi bi-pencil"></i> Sửa
                         </a>
 
-                        <!-- Delete Button -->
+                        <!-- Delete Button (Only for Admin) -->
                         <button
-                          (click)="onDeleteEmployee(employee.employeeId)"
+                          [appHasRole]="'Admin'"
+                          (click)="onDeleteEmployee(employee.employeeId, employee.name)"
                           class="btn btn-sm btn-outline-danger ms-2"
                           title="Xóa nhân viên"
                         >

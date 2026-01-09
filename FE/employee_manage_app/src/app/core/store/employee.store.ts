@@ -8,6 +8,7 @@ import {
   runInInjectionContext
 } from '@angular/core';
 import { forkJoin } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { EmployeeService } from '../services/employee.service';
 import { DepartmentService } from '../services/department.service';
 import { DesignationService } from '../services/designation.service';
@@ -132,7 +133,7 @@ export class EmployeeStore {
   /**
    * Department options for dropdown (id, name)
    */
-  readonly departmentOptions = computed(() => 
+  readonly departmentOptions = computed(() =>
     this.departmentsSignal().map(dept => ({
       id: dept.departmentId,
       name: dept.departmentName
@@ -155,6 +156,7 @@ export class EmployeeStore {
     private employeeService: EmployeeService,
     private departmentService: DepartmentService,
     private designationService: DesignationService,
+    private toastrService: ToastrService,
     private injector: Injector
   ) {
     // Có thể init effects ở đây nếu cần
@@ -164,7 +166,7 @@ export class EmployeeStore {
 
   /**
    * Load Master Data (Departments + Designations) in parallel
-   * 
+   *
    * Luồng xử lý:
    * 1. Set masterDataLoading = true
    * 2. Use forkJoin to call both APIs in parallel
@@ -280,11 +282,17 @@ export class EmployeeStore {
         this.employeesSignal.set([...currentEmployees, response.data]);
         this.totalCountSignal.set(currentEmployees.length + 1);
         this.loadingSignal.set(false);
+        
+        // Show success toast
+        this.toastrService.success('Nhân viên đã được tạo thành công!', 'Thành công');
       },
       error: (error) => {
-        const errorMessage = error?.error?.message || 'Failed to create employee';
+        const errorMessage = error?.error?.message || 'Không thể tạo nhân viên';
         this.errorSignal.set(errorMessage);
         this.loadingSignal.set(false);
+        
+        // Show error toast
+        this.toastrService.error(errorMessage, 'Lỗi');
       }
     });
   }
@@ -315,11 +323,17 @@ export class EmployeeStore {
         }
 
         this.loadingSignal.set(false);
+        
+        // Show success toast
+        this.toastrService.success('Nhân viên đã được cập nhật thành công!', 'Thành công');
       },
       error: (error) => {
-        const errorMessage = error?.error?.message || 'Failed to update employee';
+        const errorMessage = error?.error?.message || 'Không thể cập nhật nhân viên';
         this.errorSignal.set(errorMessage);
         this.loadingSignal.set(false);
+        
+        // Show error toast
+        this.toastrService.error(errorMessage, 'Lỗi');
       }
     });
   }
@@ -348,11 +362,17 @@ export class EmployeeStore {
         }
 
         this.loadingSignal.set(false);
+        
+        // Show success toast
+        this.toastrService.success('Nhân viên đã được xóa thành công!', 'Thành công');
       },
       error: (error) => {
-        const errorMessage = error?.error?.message || 'Failed to delete employee';
+        const errorMessage = error?.error?.message || 'Không thể xóa nhân viên';
         this.errorSignal.set(errorMessage);
         this.loadingSignal.set(false);
+        
+        // Show error toast
+        this.toastrService.error(errorMessage, 'Lỗi');
       }
     });
   }

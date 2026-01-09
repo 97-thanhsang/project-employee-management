@@ -1,8 +1,11 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
 import { EmployeeStore } from '@core/store/employee.store';
 import { Employee, Designation } from '@core/models';
+import { HasRoleDirective } from '@shared/directives';
+import { DesignationNamePipe } from '@shared/pipes';
 
 /**
  * EmployeeListComponent
@@ -21,7 +24,7 @@ import { Employee, Designation } from '@core/models';
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, HasRoleDirective, DesignationNamePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']
@@ -37,13 +40,26 @@ export class EmployeeListComponent implements OnInit {
   }
 
   /**
-   * Xóa nhân viên (với confirmation)
+   * Xóa nhân viên (với SweetAlert2 confirmation)
    * @param employeeId ID của nhân viên cần xóa
+   * @param employeeName Tên nhân viên (for confirmation)
    */
-  onDeleteEmployee(employeeId: number): void {
-    if (confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) {
-      this.store.deleteEmployee(employeeId);
-    }
+  onDeleteEmployee(employeeId: number, employeeName: string): void {
+    Swal.fire({
+      title: 'Xóa nhân viên?',
+      text: `Bạn có chắc chắn muốn xóa "${employeeName}"? Hành động này không thể hoàn tác.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Có, xóa',
+      cancelButtonText: 'Hủy',
+      reverseButtons: true
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.store.deleteEmployee(employeeId);
+      }
+    });
   }
 
   /**
