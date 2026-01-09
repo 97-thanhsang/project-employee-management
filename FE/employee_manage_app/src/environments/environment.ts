@@ -5,6 +5,6 @@
  * Ví dụ: this.env.apiUrl
  */
 export const environment = {
-  apiUrl: 'http://localhost:5000/api',
+  apiUrl: 'https://localhost:44316/api',
   production: false
 };

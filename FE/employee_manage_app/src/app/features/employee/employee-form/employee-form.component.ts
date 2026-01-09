@@ -59,10 +59,10 @@ export class EmployeeFormComponent implements OnInit {
       city: ['', Validators.required],
       state: ['', Validators.required],
       pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
-      departmentId: ['', Validators.required],
       designationId: ['', Validators.required],
-      salary: ['', [Validators.required, Validators.min(0)]],
-      password: ['', [Validators.required, Validators.minLength(6)]] // Required for create, optional for update
+      password: ['', [Validators.required, Validators.minLength(6)]], // Required for create, optional for update,
+      createDate: [''],
+      modifiedDate: ['']
     });
   }
 
@@ -88,6 +88,8 @@ export class EmployeeFormComponent implements OnInit {
           state: selectedEmployee.state,
           pincode: selectedEmployee.pincode,
           designationId: selectedEmployee.designationId,
+          createDate: selectedEmployee.createDate,
+          modifiedDate: selectedEmployee.modifiedDate
         });
       }
     }, 500);
@@ -103,8 +105,10 @@ export class EmployeeFormComponent implements OnInit {
 
     this.isSubmitting = true;
     const formValue = this.form.value;
+    const currentDate = new Date().toISOString(); // ISO format: 2024-01-10T12:30:45.123Z
 
     if (this.isEditMode && this.employeeId) {
+      const selectedEmployee = this.store.selectedEmployee();
       // Update mode (password optional)
       const updatePayload: UpdateEmployeeRequest = {
         employeeId: this.employeeId,
@@ -116,6 +120,8 @@ export class EmployeeFormComponent implements OnInit {
         state: formValue.state,
         pincode: formValue.pincode,
         designationId: formValue.designationId,
+        createDate: formValue.createDate,
+        modifiedDate: currentDate // Set to current date when updating
       };
 
       // Only include password if provided
@@ -136,7 +142,9 @@ export class EmployeeFormComponent implements OnInit {
         state: formValue.state,
         pincode: formValue.pincode,
         designationId: formValue.designationId,
-        password: formValue.password
+        password: formValue.password,
+        createDate: currentDate, // Set to current date when creating
+        modifiedDate: currentDate  // Set to current date when creating
       };
 
       this.store.addEmployee(createPayload);

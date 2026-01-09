@@ -108,49 +108,10 @@
                     </div>
                   }
                 </div>
-
-                <div class="col-md-6 mb-3">
-                  <label for="salary" class="form-label">
-                    Salary <span class="text-danger">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="salary"
-                    formControlName="salary"
-                    [class.is-invalid]="hasError('salary', 'required')"
-                    placeholder="Enter salary">
-                  @if (hasError('salary', 'required')) {
-                    <div class="invalid-feedback">
-                      Salary is required
-                    </div>
-                  }
-                </div>
               </div>
 
-              <!-- Row 3: Department & Designation -->
+              <!-- Row 3: Designation -->
               <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="departmentId" class="form-label">
-                    Department <span class="text-danger">*</span>
-                  </label>
-                  <select
-                    class="form-select"
-                    id="departmentId"
-                    formControlName="departmentId"
-                    [class.is-invalid]="hasError('departmentId', 'required')">
-                    <option value="">-- Select Department --</option>
-                    @for (dept of store.departmentOptions(); track dept.id) {
-                      <option [value]="dept.id">{{ dept.name }}</option>
-                    }
-                  </select>
-                  @if (hasError('departmentId', 'required')) {
-                    <div class="invalid-feedback">
-                      Department is required
-                    </div>
-                  }
-                </div>
-
                 <div class="col-md-6 mb-3">
                   <label for="designationId" class="form-label">
                     Designation <span class="text-danger">*</span>

@@ -32,6 +32,9 @@ export interface CreateEmployeeRequest {
   altContactNo?: string;
   designationId: number;
   password: string; // Bắt buộc khi tạo mới
+  createDate: string;
+  modifiedDate: string;
+
 }
 
 /**
@@ -49,4 +52,7 @@ export interface UpdateEmployeeRequest {
   altContactNo?: string;
   designationId: number;
   password?: string; // Tùy chọn khi cập nhật
+  createDate: string;
+  modifiedDate: string;
+
 }

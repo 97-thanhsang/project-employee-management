@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import {
   signal,
   WritableSignal,
@@ -157,7 +157,8 @@ export class EmployeeStore {
     private departmentService: DepartmentService,
     private designationService: DesignationService,
     private toastrService: ToastrService,
-    private injector: Injector
+    private injector: Injector,
+    private ngZone: NgZone
   ) {
     // Có thể init effects ở đây nếu cần
   }
@@ -184,15 +185,19 @@ export class EmployeeStore {
     }).subscribe({
       next: (result) => {
         // Success: update state
-        this.departmentsSignal.set(result.departments.data || []);
-        this.designationsSignal.set(result.designations.data || []);
-        this.masterDataLoadingSignal.set(false);
+        this.ngZone.run(() => {
+          this.departmentsSignal.set(result.departments.data || []);
+          this.designationsSignal.set(result.designations.data || []);
+          this.masterDataLoadingSignal.set(false);
+        });
       },
       error: (error) => {
         // Error: update error signal
-        const errorMessage = error?.error?.message || 'Failed to load master data';
-        this.errorSignal.set(errorMessage);
-        this.masterDataLoadingSignal.set(false);
+        this.ngZone.run(() => {
+          const errorMessage = error?.error?.message || 'Failed to load master data';
+          this.errorSignal.set(errorMessage);
+          this.masterDataLoadingSignal.set(false);
+        });
       }
     });
   }
@@ -231,15 +236,19 @@ export class EmployeeStore {
       .subscribe({
         next: (response) => {
           // Success: update state
-          this.employeesSignal.set(response.data || []);
-          this.totalCountSignal.set(response.data?.length || 0);
-          this.loadingSignal.set(false);
+          this.ngZone.run(() => {
+            this.employeesSignal.set(response.data || []);
+            this.totalCountSignal.set(response.data?.length || 0);
+            this.loadingSignal.set(false);
+          });
         },
         error: (error) => {
           // Error: update error signal
-          const errorMessage = error?.error?.message || 'Failed to load employees';
-          this.errorSignal.set(errorMessage);
-          this.loadingSignal.set(false);
+          this.ngZone.run(() => {
+            const errorMessage = error?.error?.message || 'Failed to load employees';
+            this.errorSignal.set(errorMessage);
+            this.loadingSignal.set(false);
+          });
         }
       });
   }
@@ -255,13 +264,17 @@ export class EmployeeStore {
 
     this.employeeService.getEmployeeById(employeeId).subscribe({
       next: (response) => {
-        this.selectedEmployeeSignal.set(response.data);
-        this.loadingSignal.set(false);
+        this.ngZone.run(() => {
+          this.selectedEmployeeSignal.set(response.data);
+          this.loadingSignal.set(false);
+        });
       },
       error: (error) => {
-        const errorMessage = error?.error?.message || 'Failed to load employee';
-        this.errorSignal.set(errorMessage);
-        this.loadingSignal.set(false);
+        this.ngZone.run(() => {
+          const errorMessage = error?.error?.message || 'Failed to load employee';
+          this.errorSignal.set(errorMessage);
+          this.loadingSignal.set(false);
+        });
       }
     });
   }

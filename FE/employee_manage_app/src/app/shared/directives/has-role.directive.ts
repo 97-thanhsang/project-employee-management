@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnDestroy, inject } from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnDestroy, inject, Optional } from '@angular/core';
 import { AuthService, UserRole } from '@core/services/auth.service';
 import { effect } from '@angular/core';
 
@@ -30,29 +30,31 @@ export class HasRoleDirective implements OnInit, OnDestroy {
 
   // Inject dependencies
   private authService = inject(AuthService);
-  private templateRef = inject(TemplateRef<any>);
+  private templateRef = inject(TemplateRef<any>, { optional: true });
   private viewContainer = inject(ViewContainerRef);
 
   // Track if view is currently created
   private hasView = false;
 
-  // Effect to react to user changes
-  private userEffect: any;
+  // Effect to react to user changes - created during field initialization (injection context)
+  private userEffect = effect(() => {
+    // Access user signal to establish dependency
+    this.authService.currentUser();
+    // Update view when user changes
+    this.updateView();
+  });
 
   ngOnInit(): void {
-    // Create an effect that responds to user changes
-    this.userEffect = effect(() => {
-      // Access user signal to establish dependency
-      this.authService.currentUser();
-      // Update view when user changes
-      this.updateView();
-    });
+    // Initial view update
+    this.updateView();
   }
 
   /**
    * Update view based on user role
    */
   private updateView(): void {
+    if (!this.templateRef) return; // Exit if template ref not available
+    
     const hasPermission = this.authService.hasAnyRole(this.requiredRoles);
 
     if (hasPermission && !this.hasView) {
