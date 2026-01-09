@@ -3,14 +3,14 @@ import { Department } from '@core/models';
 
 /**
  * DepartmentNamePipe
- * 
+ *
  * Pure pipe to get department name from ID.
  * Pure pipes are only executed when their input values change,
  * making them very efficient for repeated use.
- * 
+ *
  * Usage in template:
  * {{ employee.departmentId | departmentName: store.departments() }}
- * 
+ *
  * Example:
  * {{ 1 | departmentName: departments }}  →  "IT"
  * {{ 999 | departmentName: departments }} →  "N/A"

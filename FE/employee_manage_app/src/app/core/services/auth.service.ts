@@ -25,7 +25,7 @@ export interface User {
 /**
  * AuthService
  * Manages user authentication and authorization
- * 
+ *
  * For now, this is a mock service with hardcoded Admin user.
  * In production, you would:
  * 1. Authenticate with backend

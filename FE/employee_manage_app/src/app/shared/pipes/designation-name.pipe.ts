@@ -3,14 +3,14 @@ import { Designation } from '@core/models';
 
 /**
  * DesignationNamePipe
- * 
+ *
  * Pure pipe to get designation name from ID.
  * Pure pipes are only executed when their input values change,
  * making them very efficient for repeated use.
- * 
+ *
  * Usage in template:
  * {{ employee.designationId | designationName: store.designations() }}
- * 
+ *
  * Example:
  * {{ 1 | designationName: designations }}  →  "Senior Developer"
  * {{ 999 | designationName: designations }} →  "N/A"

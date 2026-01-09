@@ -282,7 +282,7 @@ export class EmployeeStore {
         this.employeesSignal.set([...currentEmployees, response.data]);
         this.totalCountSignal.set(currentEmployees.length + 1);
         this.loadingSignal.set(false);
-        
+
         // Show success toast
         this.toastrService.success('Nhân viên đã được tạo thành công!', 'Thành công');
       },
@@ -290,7 +290,7 @@ export class EmployeeStore {
         const errorMessage = error?.error?.message || 'Không thể tạo nhân viên';
         this.errorSignal.set(errorMessage);
         this.loadingSignal.set(false);
-        
+
         // Show error toast
         this.toastrService.error(errorMessage, 'Lỗi');
       }
@@ -323,7 +323,7 @@ export class EmployeeStore {
         }
 
         this.loadingSignal.set(false);
-        
+
         // Show success toast
         this.toastrService.success('Nhân viên đã được cập nhật thành công!', 'Thành công');
       },
@@ -331,7 +331,7 @@ export class EmployeeStore {
         const errorMessage = error?.error?.message || 'Không thể cập nhật nhân viên';
         this.errorSignal.set(errorMessage);
         this.loadingSignal.set(false);
-        
+
         // Show error toast
         this.toastrService.error(errorMessage, 'Lỗi');
       }
@@ -362,7 +362,7 @@ export class EmployeeStore {
         }
 
         this.loadingSignal.set(false);
-        
+
         // Show success toast
         this.toastrService.success('Nhân viên đã được xóa thành công!', 'Thành công');
       },
@@ -370,7 +370,7 @@ export class EmployeeStore {
         const errorMessage = error?.error?.message || 'Không thể xóa nhân viên';
         this.errorSignal.set(errorMessage);
         this.loadingSignal.set(false);
-        
+
         // Show error toast
         this.toastrService.error(errorMessage, 'Lỗi');
       }

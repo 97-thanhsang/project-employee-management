@@ -4,13 +4,13 @@ import { effect } from '@angular/core';
 
 /**
  * HasRoleDirective
- * 
+ *
  * Structural directive to show/hide content based on user role.
- * 
+ *
  * Usage:
  * <button *appHasRole="'Admin'"> ... </button>
  * <button *appHasRole="['Admin', 'Manager']"> ... </button>
- * 
+ *
  * The element will only be displayed if the current user has one of the specified roles.
  */
 @Directive({
