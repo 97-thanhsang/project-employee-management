@@ -1,5 +1,10 @@
-import { Injectable } from '@angular/core';
-import { signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../../environments/environment';
+import { ApiResponse } from '../models/api-response.model';
 
 /**
  * User Role Enum
@@ -37,94 +42,90 @@ export interface User {
   providedIn: 'root'
 })
 export class AuthService {
-  // Current logged-in user
   private currentUserSignal: WritableSignal<User | null> = signal(null);
-
-  // Expose user as read-only
   readonly currentUser = this.currentUserSignal.asReadonly();
+  private readonly tokenKey = 'authToken';
 
-  constructor() {
-    // Mock: Set logged-in Admin user on app init
-    this.initializeMockUser();
+  constructor(private http: HttpClient) {
+    this.initializeUser();
   }
 
-  /**
-   * Initialize mock user (for development/demo)
-   * In production: Replace with actual login() method
-   */
-  private initializeMockUser(): void {
-    const mockUser: User = {
-      userId: 1,
-      username: 'admin',
-      email: 'admin@example.com',
-      role: UserRole.Admin,
-      fullName: 'Administrator',
-      isAuthenticated: true
-    };
-    this.currentUserSignal.set(mockUser);
+  private initializeUser(): void {
+    const token = localStorage.getItem(this.tokenKey);
+    if (token) {
+      if (this.isTokenExpired(token)) {
+        this.logout();
+      } else {
+        this.setUserFromToken(token);
+      }
+    }
   }
 
-  /**
-   * Check if current user has a specific role
-   * @param role Role to check
-   * @returns true if user has role, false otherwise
-   */
+  login(model: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/Auth/login`, model).pipe(
+      tap((response: ApiResponse<any>) => {
+        if (response.data && response.data.token) {
+          localStorage.setItem(this.tokenKey, response.data.token);
+          this.setUserFromToken(response.data.token);
+        }
+      })
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    this.currentUserSignal.set(null);
+  }
+
+  private setUserFromToken(token: string): void {
+    try {
+      const decoded: any = jwtDecode(token);
+
+      // Map claims to User object
+      // Note: Adjust claim names based on your actual JWT payload
+      const user: User = {
+        userId: parseInt(decoded.sub || '0'),
+        username: decoded.email || '',
+        email: decoded.email || '',
+        role: (decoded.role || UserRole.User) as UserRole,
+        fullName: decoded.name || decoded.email || 'User',
+        isAuthenticated: true
+      };
+
+      this.currentUserSignal.set(user);
+    } catch (error) {
+      console.error('Error decoding token', error);
+      this.logout();
+    }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded.exp) {
+        return Math.floor(Date.now() / 1000) > decoded.exp;
+      }
+      return false;
+    } catch {
+      return true;
+    }
+  }
+
   hasRole(role: UserRole | string): boolean {
     const user = this.currentUserSignal();
     return user ? user.role === role : false;
   }
 
-  /**
-   * Check if user has any of the provided roles
-   * @param roles Array of roles to check
-   * @returns true if user has any of the roles
-   */
   hasAnyRole(roles: (UserRole | string)[]): boolean {
     const user = this.currentUserSignal();
     return user ? roles.includes(user.role) : false;
   }
 
-  /**
-   * Get current user (readonly signal)
-   * Usage: this.authService.currentUser()
-   */
   getUser(): User | null {
     return this.currentUserSignal();
   }
 
-  /**
-   * Check if user is authenticated
-   * @returns true if user is authenticated
-   */
   isAuthenticated(): boolean {
-    const user = this.currentUserSignal();
-    return user ? user.isAuthenticated : false;
-  }
-
-  /**
-   * Logout user
-   * In production: Clear JWT token from storage
-   */
-  logout(): void {
-    this.currentUserSignal.set(null);
-  }
-
-  /**
-   * Mock login method (for development)
-   * In production: Make HTTP call to backend
-   * @param username Username
-   * @param password Password
-   */
-  login(username: string, password: string): void {
-    // This is a mock implementation
-    const mockUser: User = {
-      userId: 1,
-      username: username,
-      email: `${username}@example.com`,
-      role: UserRole.Admin,
-      fullName: 'Test User',
-      isAuthenticated: true
-    };
-    this.currentUserSignal.set(mockUser);
+    return !!this.currentUserSignal();
   }
 }
