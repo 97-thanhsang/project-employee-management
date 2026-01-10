@@ -6,13 +6,13 @@
 ## Actions
 
 ### 1. Granular Loading State
-- [ ] Add `isCreating`, `isUpdating`, `isDeleting` signals to `EmployeeStore`.
-- [ ] Update UI to use specific loading states (e.g., loading spinner on "Save" button only, not blocking whole form).
+- [x] Add `isCreating`, `isUpdating`, `isDeleting` signals to `EmployeeStore`.
+- [x] Update UI to use specific loading states (e.g., loading spinner on "Save" button only, not blocking whole form).
 
 ### 2. Data Integrity Strategy
-- [ ] Review `addEmployee` and `updateEmployee` in Store.
-- [ ] Decision: Keep optimistic/local update OR switch to "Invalidate & Refetch" pattern.
-- [ ] Implement chosen strategy.
+- [x] Review `addEmployee` and `updateEmployee` in Store.
+- [x] Decision: Keep optimistic/local update OR switch to "Invalidate & Refetch" pattern. (Chosen: Local Update with Immutable Spread)
+- [x] Implement chosen strategy.
 
 ## Progress Log
 - **[Date]**: Phase initialized.
