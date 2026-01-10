@@ -79,6 +79,15 @@ export class EmployeeStore {
   /** Master data loading state */
   private masterDataLoadingSignal: WritableSignal<boolean> = signal(false);
 
+  /** Creating state */
+  private isCreatingSignal: WritableSignal<boolean> = signal(false);
+
+  /** Updating state */
+  private isUpdatingSignal: WritableSignal<boolean> = signal(false);
+
+  /** Deleting state */
+  private isDeletingSignal: WritableSignal<boolean> = signal(false);
+
   // ============= DERIVED/COMPUTED SIGNALS (PUBLIC READ-ONLY) =============
 
   /**
@@ -90,7 +99,27 @@ export class EmployeeStore {
   /**
    * Expose read-only loading state
    */
-  readonly isLoading = computed(() => this.loadingSignal());
+  readonly isLoading = computed(() =>
+    this.loadingSignal() ||
+    this.isCreatingSignal() ||
+    this.isUpdatingSignal() ||
+    this.isDeletingSignal()
+  );
+
+  /**
+   * Expose read-only creating state
+   */
+  readonly isCreating = computed(() => this.isCreatingSignal());
+
+  /**
+   * Expose read-only updating state
+   */
+  readonly isUpdating = computed(() => this.isUpdatingSignal());
+
+  /**
+   * Expose read-only deleting state
+   */
+  readonly isDeleting = computed(() => this.isDeletingSignal());
 
   /**
    * Expose read-only error
@@ -285,9 +314,10 @@ export class EmployeeStore {
    * Thêm nhân viên mới
    *
    * @param payload CreateEmployeeRequest
+   * @param onSuccess Callback khi thành công
    */
-  addEmployee(payload: CreateEmployeeRequest): void {
-    this.loadingSignal.set(true);
+  addEmployee(payload: CreateEmployeeRequest, onSuccess?: () => void): void {
+    this.isCreatingSignal.set(true);
     this.errorSignal.set(null);
 
     this.employeeService.createEmployee(payload).subscribe({
@@ -296,16 +326,19 @@ export class EmployeeStore {
         const currentEmployees = this.employeesSignal();
         this.employeesSignal.set([...currentEmployees, response.data]);
         this.totalCountSignal.set(currentEmployees.length + 1);
-        this.loadingSignal.set(false);
+        this.isCreatingSignal.set(false);
 
         // Show success toast
         this.toastrService.success('Nhân viên đã được tạo thành công!', 'Thành công');
+
+        // Execute callback
+        if (onSuccess) onSuccess();
       },
 
       error: (err) => {
         const errorObj = mapToAppError(err, 'Không thể tạo nhân viên');
         this.errorSignal.set(errorObj);
-        this.loadingSignal.set(false);
+        this.isCreatingSignal.set(false);
 
         // Show error toast
         this.toastrService.error(errorObj.message, 'Lỗi');
@@ -318,9 +351,10 @@ export class EmployeeStore {
    *
    * @param employeeId ID của nhân viên
    * @param payload UpdateEmployeeRequest
+   * @param onSuccess Callback khi thành công
    */
-  updateEmployee(employeeId: number, payload: UpdateEmployeeRequest): void {
-    this.loadingSignal.set(true);
+  updateEmployee(employeeId: number, payload: UpdateEmployeeRequest, onSuccess?: () => void): void {
+    this.isUpdatingSignal.set(true);
     this.errorSignal.set(null);
 
     this.employeeService.updateEmployee(employeeId, payload).subscribe({
@@ -338,16 +372,19 @@ export class EmployeeStore {
           this.selectedEmployeeSignal.set(response.data);
         }
 
-        this.loadingSignal.set(false);
+        this.isUpdatingSignal.set(false);
 
         // Show success toast
         this.toastrService.success('Nhân viên đã được cập nhật thành công!', 'Thành công');
+
+        // Execute callback
+        if (onSuccess) onSuccess();
       },
 
       error: (err) => {
         const errorObj = mapToAppError(err, 'Không thể cập nhật nhân viên');
         this.errorSignal.set(errorObj);
-        this.loadingSignal.set(false);
+        this.isUpdatingSignal.set(false);
 
         // Show error toast
         this.toastrService.error(errorObj.message, 'Lỗi');
@@ -361,7 +398,7 @@ export class EmployeeStore {
    * @param employeeId ID của nhân viên cần xóa
    */
   deleteEmployee(employeeId: number): void {
-    this.loadingSignal.set(true);
+    this.isDeletingSignal.set(true);
     this.errorSignal.set(null);
 
     this.employeeService.deleteEmployee(employeeId).subscribe({
@@ -378,7 +415,7 @@ export class EmployeeStore {
           this.selectedEmployeeSignal.set(null);
         }
 
-        this.loadingSignal.set(false);
+        this.isDeletingSignal.set(false);
 
         // Show success toast
         this.toastrService.success('Nhân viên đã được xóa thành công!', 'Thành công');
@@ -387,7 +424,7 @@ export class EmployeeStore {
       error: (err) => {
         const errorObj = mapToAppError(err, 'Không thể xóa nhân viên');
         this.errorSignal.set(errorObj);
-        this.loadingSignal.set(false);
+        this.isDeletingSignal.set(false);
 
         // Show error toast
         this.toastrService.error(errorObj.message, 'Lỗi');

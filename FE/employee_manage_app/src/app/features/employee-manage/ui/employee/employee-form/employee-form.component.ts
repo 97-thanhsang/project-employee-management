@@ -46,8 +46,7 @@ export class EmployeeFormComponent implements OnInit {
   isEditMode = false;
   employeeId: number | null = null;
 
-  // Track submit state
-  isSubmitting = false;
+
 
   ngOnInit(): void {
     // Initialize form
@@ -119,11 +118,10 @@ export class EmployeeFormComponent implements OnInit {
    * Submit form (Create or Update)
    */
   onSubmit(): void {
-    if (!this.form.valid || this.isSubmitting) {
+    if (!this.form.valid || this.store.isCreating() || this.store.isUpdating()) {
       return;
     }
 
-    this.isSubmitting = true;
     const formValue = this.form.value;
     const currentDate = new Date().toISOString(); // ISO format: 2024-01-10T12:30:45.123Z
 
@@ -149,7 +147,9 @@ export class EmployeeFormComponent implements OnInit {
         updatePayload.password = formValue.password;
       }
 
-      this.store.updateEmployee(this.employeeId, updatePayload);
+      this.store.updateEmployee(this.employeeId, updatePayload, () => {
+        this.router.navigate(['/employee-manage/employees']);
+      });
     } else {
       // Create mode (password required)
       const createPayload: CreateEmployeeRequest = {
@@ -167,14 +167,10 @@ export class EmployeeFormComponent implements OnInit {
         modifiedDate: currentDate  // Set to current date when creating
       };
 
-      this.store.addEmployee(createPayload);
+      this.store.addEmployee(createPayload, () => {
+        this.router.navigate(['/employee-manage/employees']);
+      });
     }
-
-    // Reset submitting state and navigate back
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.router.navigate(['/employee-manage/employees']);
-    }, 1000);
   }
 
   /**
