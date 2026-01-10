@@ -1,6 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { apiInterceptor } from './core/interceptors/api.interceptor';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
@@ -19,7 +20,8 @@ import {
   DeleteOutline,
   UserOutline,
   LockOutline,
-  WarningFill
+  WarningFill,
+  MailOutline
 } from '@ant-design/icons-angular/icons';
 
 import { routes } from './app.routes';
@@ -39,14 +41,15 @@ const icons = [
   DeleteOutline,
   UserOutline,
   LockOutline,
-  WarningFill
+  WarningFill,
+  MailOutline
 ];
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([apiInterceptor])),
     provideAnimations(),
     provideNzIcons(icons),
     provideToastr({
