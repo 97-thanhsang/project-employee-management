@@ -21,10 +21,12 @@ import { DesignationNamePipe } from '@shared/pipes';
  *
  * Change Detection: OnPush (performance optimization)
  */
+import { NzIconModule } from 'ng-zorro-antd/icon';
+
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, HasRoleDirective, DesignationNamePipe],
+  imports: [CommonModule, RouterLink, HasRoleDirective, DesignationNamePipe, NzIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']

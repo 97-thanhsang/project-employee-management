@@ -34,7 +34,7 @@ export class LoginComponent {
                 next: (response) => {
                     this.isLoading = false;
                     this.toastr.success('Login successful', 'Welcome');
-                    this.router.navigate(['/employees']);
+                    this.router.navigate(['/dashboard']);
                 },
                 error: (err) => {
                     this.isLoading = false;
