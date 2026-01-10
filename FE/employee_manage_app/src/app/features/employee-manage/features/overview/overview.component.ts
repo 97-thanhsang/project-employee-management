@@ -5,18 +5,18 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../../../../core/auth/services/auth.service';
-import { DashboardService } from '../../services/dashboard.service';
+import { OverviewService } from '../../services/overview.service';
 
 @Component({
-    selector: 'app-dashboard',
+    selector: 'app-employee-overview',
     standalone: true,
     imports: [CommonModule, NzGridModule, NzCardModule, NzStatisticModule, NzIconModule],
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
+    templateUrl: './overview.component.html',
+    styleUrls: ['./overview.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class OverviewComponent implements OnInit {
     private authService = inject(AuthService);
-    private dashboardService = inject(DashboardService);
+    private overviewService = inject(OverviewService);
 
     user = this.authService.currentUser;
 
@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     departmentCount = 0;
 
     ngOnInit() {
-        this.dashboardService.getEmployeeCount().subscribe(count => this.employeeCount = count);
-        this.dashboardService.getDepartmentCount().subscribe(count => this.departmentCount = count);
+        this.overviewService.getEmployeeCount().subscribe(count => this.employeeCount = count);
+        this.overviewService.getDepartmentCount().subscribe(count => this.departmentCount = count);
     }
 }

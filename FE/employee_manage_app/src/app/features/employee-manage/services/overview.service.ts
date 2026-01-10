@@ -7,7 +7,7 @@ import { ApiResponse } from '../../../core/models/api-response.model';
 @Injectable({
     providedIn: 'root'
 })
-export class DashboardService {
+export class OverviewService {
     private http = inject(HttpClient);
     private apiUrl = environment.apiUrl;
 
