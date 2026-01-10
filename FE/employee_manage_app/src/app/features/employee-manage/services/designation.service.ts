@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { ApiResponse, Designation } from '../models';
+import { environment } from '../../../../environments/environment';
+import { Designation } from '../models';
+import { ApiResponse } from '../../../core/models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { ApiResponse, Designation } from '../models';
 export class DesignationService {
   private apiUrl = `${environment.apiUrl}/DesignationMaster`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Get all designations

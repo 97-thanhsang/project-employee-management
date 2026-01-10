@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiResponse, Employee, CreateEmployeeRequest, UpdateEmployeeRequest } from '../models';
-import { environment } from '../../../environments/environment';
+import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest } from '../models';
+import { ApiResponse } from '../../../core/models/api-response.model';
+import { environment } from '../../../../environments/environment';
 
 /**
  * EmployeeService
@@ -21,7 +22,7 @@ import { environment } from '../../../environments/environment';
 export class EmployeeService {
   private readonly employeeEndpoint = `${environment.apiUrl}/EmployeeMaster`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Lấy danh sách nhân viên (hỗ trợ filter, sort, page)

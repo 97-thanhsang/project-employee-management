@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -34,7 +34,7 @@ export class LoginComponent {
                 next: (response) => {
                     this.isLoading = false;
                     this.toastr.success('Login successful', 'Welcome');
-                    this.router.navigate(['/employees']);
+                    this.router.navigate(['/dashboard']);
                 },
                 error: (err) => {
                     this.isLoading = false;

@@ -1,0 +1,11 @@
+.navbar {
+    height: 64px;
+    z-index: 1001; // Stay above user content
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    font-weight: 600;
+    font-size: 14px;
+}

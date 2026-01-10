@@ -2,8 +2,8 @@ import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
-import { EmployeeStore } from '@core/store/employee.store';
-import { Employee, Designation } from '@core/models';
+import { EmployeeStore } from '../../store/employee.store';
+import { Employee, Designation } from '../../models';
 import { HasRoleDirective } from '@shared/directives';
 import { DesignationNamePipe } from '@shared/pipes';
 
@@ -21,10 +21,12 @@ import { DesignationNamePipe } from '@shared/pipes';
  *
  * Change Detection: OnPush (performance optimization)
  */
+import { NzIconModule } from 'ng-zorro-antd/icon';
+
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, HasRoleDirective, DesignationNamePipe],
+  imports: [CommonModule, RouterLink, HasRoleDirective, DesignationNamePipe, NzIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']

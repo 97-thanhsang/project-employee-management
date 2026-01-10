@@ -1,5 +1,5 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnDestroy, inject, Optional } from '@angular/core';
-import { AuthService, UserRole } from '@core/services/auth.service';
+import { AuthService, UserRole } from '../../core/auth/services/auth.service';
 import { effect } from '@angular/core';
 
 /**

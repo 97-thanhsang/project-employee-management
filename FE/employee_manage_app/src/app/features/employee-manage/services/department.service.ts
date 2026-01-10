@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { ApiResponse, Department } from '../models';
+import { environment } from '../../../../environments/environment';
+import { Department } from '../models';
+import { ApiResponse } from '../../../core/models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { ApiResponse, Department } from '../models';
 export class DepartmentService {
   private apiUrl = `${environment.apiUrl}/DepartmentMaster`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Get all departments
