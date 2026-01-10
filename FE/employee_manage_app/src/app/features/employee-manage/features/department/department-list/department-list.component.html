@@ -1,0 +1,42 @@
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 fw-bold text-dark">
+            <span nz-icon nzType="apartment" nzTheme="outline" class="me-2 text-primary"></span>
+            Danh Sách Phòng Ban
+        </h1>
+        <a nz-button nzType="primary" routerLink="/employee-manage/departments/add">
+            <span nz-icon nzType="plus-circle"></span>
+            Thêm Mới
+        </a>
+    </div>
+
+    <!-- Error State -->
+    @if (store.error()) {
+    <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
+        (nzOnClose)="store.clearError()" class="mb-4 shadow-sm">
+    </nz-alert>
+    }
+
+    <!-- Empty State -->
+    @if (!store.hasDepartments() && !store.isLoading()) {
+    <nz-card class="text-center py-5 shadow-sm rounded-3">
+        <nz-empty nzNotFoundContent="Không có phòng ban nào. Hãy thêm phòng ban mới!" [nzNotFoundFooter]="footerTpl">
+            <ng-template #footerTpl>
+                <a nz-button nzType="primary" routerLink="/employee-manage/departments/add" class="mt-2">
+                    Thêm Phòng Ban Đầu Tiên
+                </a>
+            </ng-template>
+        </nz-empty>
+    </nz-card>
+    }
+
+    <!-- Data Table -->
+    @if (store.hasDepartments() || store.isLoading()) {
+    <nz-card [nzBordered]="false" class="shadow-sm rounded-3">
+        <app-department-table [departments]="store.departments()" [isLoading]="store.isLoading()"
+            (edit)="onEdit($event)" (delete)="onDelete($event)">
+        </app-department-table>
+    </nz-card>
+    }
+</div>

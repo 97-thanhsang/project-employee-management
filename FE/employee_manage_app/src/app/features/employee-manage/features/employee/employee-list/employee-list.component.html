@@ -1,0 +1,43 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 fw-bold text-dark">
+      <span nz-icon nzType="team" nzTheme="outline" class="me-2 text-primary"></span>
+      Danh Sách Nhân Viên
+    </h1>
+    <a nz-button nzType="primary" routerLink="/employee-manage/employees/add">
+      <span nz-icon nzType="plus-circle"></span>
+      Thêm Mới
+    </a>
+  </div>
+
+  <!-- Error State -->
+  @if (store.error()) {
+  <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
+    (nzOnClose)="store.clearError()" class="mb-4 shadow-sm">
+  </nz-alert>
+  }
+
+  <!-- Empty State -->
+  @if (!store.hasEmployees() && !store.isLoading()) {
+  <nz-card class="text-center py-5 shadow-sm rounded-3">
+    <nz-empty nzNotFoundContent="Không có dữ liệu nhân viên. Hãy thêm nhân viên mới!" [nzNotFoundFooter]="footerTpl">
+      <ng-template #footerTpl>
+        <a nz-button nzType="primary" routerLink="/employee-manage/employees/add" class="mt-2">
+          Thêm Nhân Viên Đầu Tiên
+        </a>
+      </ng-template>
+    </nz-empty>
+  </nz-card>
+  }
+
+  <!-- Data Table -->
+  @if (store.hasEmployees() || store.isLoading()) {
+  <nz-card [nzBordered]="false" class="shadow-sm rounded-3">
+    <app-employee-table [employees]="store.employees()" [isLoading]="store.isLoading()"
+      [totalCount]="store.totalCount()" [designations]="store.designations()" (edit)="onEdit($event)"
+      (delete)="onDelete($event)">
+    </app-employee-table>
+  </nz-card>
+  }
+</div>

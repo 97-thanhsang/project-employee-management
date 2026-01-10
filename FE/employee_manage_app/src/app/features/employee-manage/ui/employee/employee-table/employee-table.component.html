@@ -1,0 +1,40 @@
+<nz-table #basicTable [nzData]="employees" [nzLoading]="isLoading" [nzPageSize]="10" nzShowSizeChanger
+    [nzTotal]="totalCount">
+    <thead>
+        <tr>
+            <th>Tên Nhân Viên</th>
+            <th>Email</th>
+            <th>Số Điện Thoại</th>
+            <th>Chức Vụ</th>
+            <th class="text-center">Thao Tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (data of basicTable.data; track data.employeeId) {
+        <tr>
+            <td class="fw-semibold">{{ data.name }}</td>
+            <td>
+                <a [href]="'mailto:' + data.email" class="text-decoration-none">{{ data.email }}</a>
+            </td>
+            <td>{{ data.contactNo }}</td>
+            <td>
+                <nz-tag [nzColor]="'blue'">
+                    {{ data.designationId | designationName: designations }}
+                </nz-tag>
+            </td>
+            <td class="text-center">
+                <nz-space>
+                    <button *nzSpaceItem [appHasRole]="'Admin'" (click)="onEdit(data.employeeId)" nz-button
+                        nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Sửa">
+                        <span nz-icon nzType="edit"></span>
+                    </button>
+                    <button *nzSpaceItem [appHasRole]="'Admin'" (click)="onDelete(data.employeeId, data.name)" nz-button
+                        nzType="default" nzDanger nzShape="circle" nz-tooltip nzTooltipTitle="Xóa">
+                        <span nz-icon nzType="delete"></span>
+                    </button>
+                </nz-space>
+            </td>
+        </tr>
+        }
+    </tbody>
+</nz-table>

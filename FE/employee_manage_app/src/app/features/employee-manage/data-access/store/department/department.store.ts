@@ -1,9 +1,9 @@
 import { Injectable, NgZone, Injector, computed, signal, WritableSignal } from '@angular/core';
-import { Department, CreateDepartmentRequest } from '../models/department.model';
-import { DepartmentService } from '../services/department.service';
 import { ToastrService } from 'ngx-toastr';
 import { AppError } from '@core/models/app-error.model';
 import { mapToAppError } from '@core/utils/error.utils';
+import { CreateDepartmentRequest, Department } from '../../models';
+import { DepartmentService } from '../../services/department/department.service';
 
 /**
  * Department State Interface
@@ -206,7 +206,7 @@ export class DepartmentStore {
     /**
      * Select a department
      */
-    selectDepartment(department: Department): void {
+    selectDepartment(department: Department | null): void {
         this.selectedDepartmentSignal.set(department);
     }
 }

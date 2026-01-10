@@ -3,34 +3,30 @@ import { Routes } from '@angular/router';
 export const EMPLOYEE_FEATURES_ROUTES: Routes = [
     {
         path: 'overview',
-        loadComponent: () => import('./overview/overview.component').then(m => m.OverviewComponent)
+        loadComponent: () => import('../features/overview/overview.component').then(m => m.OverviewComponent)
     },
     {
         path: 'employees',
-        loadComponent: () => import('./employee-list/employee-list.component').then(m => m.EmployeeListComponent)
+        children: [
+            { path: '', loadComponent: () => import('./employee/employee-list/employee-list.component').then(m => m.EmployeeListComponent) },
+            { path: 'add', loadComponent: () => import('./employee/employee-edit/employee-edit.component').then(m => m.EmployeeEditComponent) },
+            { path: ':id/edit', loadComponent: () => import('./employee/employee-edit/employee-edit.component').then(m => m.EmployeeEditComponent) }
+        ]
     },
     {
         path: 'departments',
-        loadComponent: () => import('./department-list/department-list.component').then(m => m.DepartmentListComponent)
-    },
-    {
-        path: 'departments/add',
-        loadComponent: () => import('../ui/department/department-form/department-form.component').then(m => m.DepartmentFormComponent)
-    },
-    {
-        path: 'departments/:id/edit',
-        loadComponent: () => import('../ui/department/department-form/department-form.component').then(m => m.DepartmentFormComponent)
+        children: [
+            { path: '', loadComponent: () => import('./department/department-list/department-list.component').then(m => m.DepartmentListComponent) },
+            { path: 'add', loadComponent: () => import('./department/department-edit/department-edit.component').then(m => m.DepartmentEditComponent) },
+            { path: ':id/edit', loadComponent: () => import('./department/department-edit/department-edit.component').then(m => m.DepartmentEditComponent) }
+        ]
     },
     {
         path: 'designations',
-        loadComponent: () => import('./designation-list/designation-list.component').then(m => m.DesignationListComponent)
-    },
-    {
-        path: 'designations/add',
-        loadComponent: () => import('../ui/designation/designation-form/designation-form.component').then(m => m.DesignationFormComponent)
-    },
-    {
-        path: 'designations/:id/edit',
-        loadComponent: () => import('../ui/designation/designation-form/designation-form.component').then(m => m.DesignationFormComponent)
+        children: [
+            { path: '', loadComponent: () => import('./designation/designation-list/designation-list.component').then(m => m.DesignationListComponent) },
+            { path: 'add', loadComponent: () => import('./designation/designation-edit/designation-edit.component').then(m => m.DesignationEditComponent) },
+            { path: ':id/edit', loadComponent: () => import('./designation/designation-edit/designation-edit.component').then(m => m.DesignationEditComponent) }
+        ]
     }
 ];

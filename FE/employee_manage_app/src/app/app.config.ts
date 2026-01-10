@@ -21,7 +21,11 @@ import {
   UserOutline,
   LockOutline,
   WarningFill,
-  MailOutline
+  MailOutline,
+  ApartmentOutline,
+  UserAddOutline,
+  CloseOutline,
+  IdcardOutline
 } from '@ant-design/icons-angular/icons';
 
 import { routes } from './app.routes';
@@ -42,7 +46,11 @@ const icons = [
   UserOutline,
   LockOutline,
   WarningFill,
-  MailOutline
+  MailOutline,
+  ApartmentOutline,
+  UserAddOutline,
+  CloseOutline,
+  IdcardOutline
 ];
 
 export const appConfig: ApplicationConfig = {

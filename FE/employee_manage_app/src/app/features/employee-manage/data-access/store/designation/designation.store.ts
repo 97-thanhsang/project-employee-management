@@ -1,9 +1,9 @@
 import { Injectable, NgZone, computed, signal, WritableSignal } from '@angular/core';
-import { Designation, CreateDesignationRequest } from '../models/designation.model';
-import { DesignationService } from '../services/designation.service';
 import { ToastrService } from 'ngx-toastr';
 import { AppError } from '@core/models/app-error.model';
 import { mapToAppError } from '@core/utils/error.utils';
+import { CreateDesignationRequest, Designation } from '../../models';
+import { DesignationService } from '../../services/designation/designation.service';
 
 /**
  * Designation State Interface
@@ -200,5 +200,9 @@ export class DesignationStore {
 
     selectDesignation(designation: Designation): void {
         this.selectedDesignationSignal.set(designation);
+    }
+
+    deselectDesignation(): void {
+        this.selectedDesignationSignal.set(null);
     }
 }

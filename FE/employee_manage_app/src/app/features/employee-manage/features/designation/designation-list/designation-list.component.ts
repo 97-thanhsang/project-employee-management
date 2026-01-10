@@ -1,20 +1,16 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { DesignationStore } from '@features/employee-manage/store/designation.store';
-import { DepartmentStore } from '@features/employee-manage/store/department.store';
-import { DepartmentNamePipe } from '@shared/pipes/department-name.pipe';
-import { Designation } from '@features/employee-manage/models';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { DesignationStore } from '@features/employee-manage/data-access/store/designation/designation.store';
+import { DepartmentStore } from '@features/employee-manage/data-access/store/department/department.store';
+import { Designation } from '@features/employee-manage/data-access/models';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
-import { NzSpaceModule } from 'ng-zorro-antd/space';
-import { HasRoleDirective } from '@shared/directives/has-role.directive';
+import { DesignationTableComponent } from '../../../ui/designation/designation-table/designation-table.component';
 
 @Component({
     selector: 'app-designation-list',
@@ -22,16 +18,12 @@ import { HasRoleDirective } from '@shared/directives/has-role.directive';
     imports: [
         CommonModule,
         RouterLink,
-        HasRoleDirective,
-        DepartmentNamePipe,
-        NzTableModule,
         NzButtonModule,
         NzIconModule,
         NzCardModule,
         NzAlertModule,
         NzEmptyModule,
-        NzTooltipModule,
-        NzSpaceModule
+        DesignationTableComponent
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './designation-list.component.html',
@@ -44,6 +36,7 @@ import { HasRoleDirective } from '@shared/directives/has-role.directive';
 export class DesignationListComponent implements OnInit {
     store = inject(DesignationStore);
     departmentStore = inject(DepartmentStore);
+    router = inject(Router);
 
     ngOnInit(): void {
         this.store.loadDesignations();
@@ -51,6 +44,14 @@ export class DesignationListComponent implements OnInit {
         if (!this.departmentStore.hasDepartments()) {
             this.departmentStore.loadDepartments();
         }
+    }
+
+    onEdit(id: number): void {
+        this.router.navigate(['/employee-manage/designations', id, 'edit']);
+    }
+
+    onDelete(event: { id: number; name: string }): void {
+        this.onDeleteDesignation(event.id, event.name);
     }
 
     onDeleteDesignation(id: number, name: string): void {

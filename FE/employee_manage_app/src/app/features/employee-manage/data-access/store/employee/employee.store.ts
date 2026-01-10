@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { EmployeeService } from '../services/employee.service';
-import { DepartmentService } from '../services/department.service';
-import { DesignationService } from '../services/designation.service';
-import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest, Department, Designation } from '../models';
+import { EmployeeService } from '../../services/employee/employee.service';
+import { DepartmentService } from '../../services/department/department.service';
+import { DesignationService } from '../../services/designation/designation.service';
+import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest, Department, Designation } from '../../models';
 import { AppError } from '@core/models/app-error.model';
 import { mapToAppError } from '@core/utils/error.utils';
 

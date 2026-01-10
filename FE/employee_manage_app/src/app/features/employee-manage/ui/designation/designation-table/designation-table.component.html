@@ -1,0 +1,34 @@
+<nz-table #basicTable [nzData]="designations" [nzLoading]="isLoading" [nzPageSize]="10" nzShowSizeChanger>
+    <thead>
+        <tr>
+            <th>Tên Chức Danh</th>
+            <th>Phòng Ban</th>
+            <th class="text-center">Thao Tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (data of basicTable.data; track data.designationId) {
+        <tr>
+            <td class="fw-semibold">{{ data.designationName }}</td>
+            <td>
+                <ng-container *ngIf="departments as depts">
+                    {{ data.departmentId | departmentName: depts }}
+                </ng-container>
+            </td>
+            <td class="text-center">
+                <nz-space>
+                    <button *nzSpaceItem [appHasRole]="'Admin'" (click)="onEdit(data.designationId)" nz-button
+                        nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Sửa">
+                        <span nz-icon nzType="edit"></span>
+                    </button>
+                    <button *nzSpaceItem [appHasRole]="'Admin'"
+                        (click)="onDelete(data.designationId, data.designationName)" nz-button nzType="default" nzDanger
+                        nzShape="circle" nz-tooltip nzTooltipTitle="Xóa">
+                        <span nz-icon nzType="delete"></span>
+                    </button>
+                </nz-space>
+            </td>
+        </tr>
+        }
+    </tbody>
+</nz-table>

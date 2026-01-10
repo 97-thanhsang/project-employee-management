@@ -23,15 +23,15 @@ This plan focuses exclusively on structural improvements: **Resilience**, **Isol
 
 ## 🧩 Phase 2: Component Decoupling (Smart/Dumb)
 **Objective:** Isolate UI from Data Logic. Components must become "Dumb" (Pure UI), managed by "Smart" Containers.
-**Status:** 🔴 Not Started
+**Status:** 🟢 Completed
 
 ### Tasks
-1. [ ] **Refactor Employee Module**
-    - [ ] Convert `EmployeeFormComponent` to Dumb (Inputs/Outputs only, no Store injection).
-    - [ ] Create `EmployeeFromContainer` (Smart) to connect Store <-> Form.
-2. [ ] **Refactor Designation Module**
-    - [ ] Convert `DesignationFormComponent` to Dumb.
-    - [ ] Create `DesignationFormContainer` (Smart).
+1. [x] **Refactor Employee Module**
+    - [x] Convert `EmployeeFormComponent` to Dumb (Inputs/Outputs only, no Store injection).
+    - [x] Create `EmployeeFromContainer` (Smart) to connect Store <-> Form.
+2. [x] **Refactor Designation Module**
+    - [x] Convert `DesignationFormComponent` to Dumb.
+    - [x] Create `DesignationFormContainer` (Smart).
 
 ---
 
@@ -100,15 +100,15 @@ Kế hoạch này tập trung hoàn toàn vào việc cải thiện cấu trúc:
 
 ## 🧩 Phase 2: Tách Biệt Component (Smart/Dumb)
 **Mục tiêu:** Cô lập UI khỏi Logic Dữ Liệu. Components phải trở thành "Dumb" (Chỉ thuần UI), được quản lý bởi "Smart" Containers.
-**Trạng thái:** 🔴 Chưa bắt đầu
+**Trạng thái:** 🟢 Hoàn thành
 
 ### Nhiệm vụ
-1. [ ] **Refactor Module Employee**
-    - [ ] Chuyển đổi `EmployeeFormComponent` thành Dumb (Chỉ Inputs/Outputs, không inject Store).
-    - [ ] Tạo `EmployeeFromContainer` (Smart) để kết nối Store <-> Form.
-2. [ ] **Refactor Module Designation**
-    - [ ] Chuyển đổi `DesignationFormComponent` thành Dumb.
-    - [ ] Tạo `DesignationFormContainer` (Smart).
+1. [x] **Refactor Module Employee**
+    - [x] Chuyển đổi `EmployeeFormComponent` thành Dumb (Chỉ Inputs/Outputs, không inject Store).
+    - [x] Tạo `EmployeeFromContainer` (Smart) để kết nối Store <-> Form.
+2. [x] **Refactor Module Designation**
+    - [x] Chuyển đổi `DesignationFormComponent` thành Dumb.
+    - [x] Tạo `DesignationFormContainer` (Smart).
 
 ---
 

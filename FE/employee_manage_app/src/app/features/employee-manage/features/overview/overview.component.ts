@@ -7,7 +7,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@core/auth/services/auth.service';
-import { OverviewService } from '../../services/overview.service';
+import { OverviewService } from '../../data-access/services/overview.service';
 
 @Component({
     selector: 'app-employee-overview',
