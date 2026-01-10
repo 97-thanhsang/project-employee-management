@@ -2,8 +2,8 @@ import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
-import { EmployeeStore } from '@core/store/employee.store';
-import { Employee, Designation } from '@core/models';
+import { EmployeeStore } from '../../store/employee.store';
+import { Employee, Designation } from '../../models';
 import { HasRoleDirective } from '@shared/directives';
 import { DesignationNamePipe } from '@shared/pipes';
 

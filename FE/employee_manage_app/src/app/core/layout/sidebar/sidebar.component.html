@@ -2,19 +2,21 @@
 <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
     <li nz-menu-item nzMatchRouter>
         <a routerLink="/dashboard">
-            <i nz-icon nzType="dashboard"></i>
-            <span>Dashboard</span>
+            <i nz-icon nzType="home"></i>
+            <span>Portal</span>
         </a>
     </li>
-    <li nz-menu-item nzMatchRouter>
-        <a routerLink="/employees">
-            <i nz-icon nzType="team"></i>
-            <span>Employees</span>
-        </a>
-    </li>
-    <!-- Future Modules -->
-    <li nz-menu-item nzDisabled>
-        <i nz-icon nzType="apartment"></i>
-        <span>Departments</span>
+    <li nz-submenu nzTitle="Employee Manage" nzIcon="team">
+        <ul>
+            <li nz-menu-item nzMatchRouter>
+                <a routerLink="/employee-manage/dashboard">Overview</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+                <a routerLink="/employee-manage/employees">Employee List</a>
+            </li>
+            <li nz-menu-item nzDisabled>
+                <span>Departments</span>
+            </li>
+        </ul>
     </li>
 </ul>

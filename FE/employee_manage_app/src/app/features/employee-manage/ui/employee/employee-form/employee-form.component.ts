@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { EmployeeStore } from '@core/store/employee.store';
-import { CreateEmployeeRequest, UpdateEmployeeRequest } from '@core/models';
+import { EmployeeStore } from '../../../store/employee.store';
+import { CreateEmployeeRequest, UpdateEmployeeRequest } from '../../../models';
 
 @Component({
   selector: 'app-employee-form',
