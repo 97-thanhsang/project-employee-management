@@ -13,6 +13,8 @@ import { EmployeeService } from '../services/employee.service';
 import { DepartmentService } from '../services/department.service';
 import { DesignationService } from '../services/designation.service';
 import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest, Department, Designation } from '../models';
+import { AppError } from '@core/models/app-error.model';
+import { mapToAppError } from '@core/utils/error.utils';
 
 /**
  * State Interface
@@ -21,7 +23,7 @@ import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest, Department, Des
 interface EmployeeState {
   employees: Employee[];
   loading: boolean;
-  error: string | null;
+  error: AppError | null;
   selectedEmployee: Employee | null;
   totalCount: number; // Cho pagination
   departments: Department[];
@@ -60,7 +62,7 @@ export class EmployeeStore {
   private loadingSignal: WritableSignal<boolean> = signal(false);
 
   /** Error message */
-  private errorSignal: WritableSignal<string | null> = signal(null);
+  private errorSignal: WritableSignal<AppError | null> = signal(null);
 
   /** Nhân viên được chọn (chi tiết) */
   private selectedEmployeeSignal: WritableSignal<Employee | null> = signal(null);
@@ -191,11 +193,11 @@ export class EmployeeStore {
           this.masterDataLoadingSignal.set(false);
         });
       },
-      error: (error) => {
+
+      error: (err) => {
         // Error: update error signal
         this.ngZone.run(() => {
-          const errorMessage = error?.error?.message || 'Failed to load master data';
-          this.errorSignal.set(errorMessage);
+          this.errorSignal.set(mapToAppError(err, 'Failed to load master data'));
           this.masterDataLoadingSignal.set(false);
         });
       }
@@ -242,11 +244,11 @@ export class EmployeeStore {
             this.loadingSignal.set(false);
           });
         },
-        error: (error) => {
+
+        error: (err) => {
           // Error: update error signal
           this.ngZone.run(() => {
-            const errorMessage = error?.error?.message || 'Failed to load employees';
-            this.errorSignal.set(errorMessage);
+            this.errorSignal.set(mapToAppError(err, 'Failed to load employees'));
             this.loadingSignal.set(false);
           });
         }
@@ -269,10 +271,10 @@ export class EmployeeStore {
           this.loadingSignal.set(false);
         });
       },
-      error: (error) => {
+
+      error: (err) => {
         this.ngZone.run(() => {
-          const errorMessage = error?.error?.message || 'Failed to load employee';
-          this.errorSignal.set(errorMessage);
+          this.errorSignal.set(mapToAppError(err, 'Failed to load employee'));
           this.loadingSignal.set(false);
         });
       }
@@ -299,13 +301,14 @@ export class EmployeeStore {
         // Show success toast
         this.toastrService.success('Nhân viên đã được tạo thành công!', 'Thành công');
       },
-      error: (error) => {
-        const errorMessage = error?.error?.message || 'Không thể tạo nhân viên';
-        this.errorSignal.set(errorMessage);
+
+      error: (err) => {
+        const errorObj = mapToAppError(err, 'Không thể tạo nhân viên');
+        this.errorSignal.set(errorObj);
         this.loadingSignal.set(false);
 
         // Show error toast
-        this.toastrService.error(errorMessage, 'Lỗi');
+        this.toastrService.error(errorObj.message, 'Lỗi');
       }
     });
   }
@@ -340,13 +343,14 @@ export class EmployeeStore {
         // Show success toast
         this.toastrService.success('Nhân viên đã được cập nhật thành công!', 'Thành công');
       },
-      error: (error) => {
-        const errorMessage = error?.error?.message || 'Không thể cập nhật nhân viên';
-        this.errorSignal.set(errorMessage);
+
+      error: (err) => {
+        const errorObj = mapToAppError(err, 'Không thể cập nhật nhân viên');
+        this.errorSignal.set(errorObj);
         this.loadingSignal.set(false);
 
         // Show error toast
-        this.toastrService.error(errorMessage, 'Lỗi');
+        this.toastrService.error(errorObj.message, 'Lỗi');
       }
     });
   }
@@ -379,13 +383,14 @@ export class EmployeeStore {
         // Show success toast
         this.toastrService.success('Nhân viên đã được xóa thành công!', 'Thành công');
       },
-      error: (error) => {
-        const errorMessage = error?.error?.message || 'Không thể xóa nhân viên';
-        this.errorSignal.set(errorMessage);
+
+      error: (err) => {
+        const errorObj = mapToAppError(err, 'Không thể xóa nhân viên');
+        this.errorSignal.set(errorObj);
         this.loadingSignal.set(false);
 
         // Show error toast
-        this.toastrService.error(errorMessage, 'Lỗi');
+        this.toastrService.error(errorObj.message, 'Lỗi');
       }
     });
   }
@@ -424,4 +429,6 @@ export class EmployeeStore {
   deselectEmployee(): void {
     this.selectedEmployeeSignal.set(null);
   }
+
+
 }

@@ -20,7 +20,7 @@
 
         <!-- Error State -->
         @if (store.error()) {
-        <nz-alert nzType="error" nzMessage="Error" [nzDescription]="store.error()!" nzShowIcon nzCloseable
+        <nz-alert nzType="error" nzMessage="Error" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
           (nzOnClose)="store.clearError()" class="mb-4">
         </nz-alert>
         }
