@@ -1,0 +1,36 @@
+<div class="site-page-header-ghost-wrapper">
+    <div class="mb-4">
+        <h3 class="fw-bold">Dashboard</h3>
+        <p class="text-muted">Welcome back, {{ user()?.fullName }}!</p>
+    </div>
+</div>
+
+<div nz-row [nzGutter]="[16, 16]">
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
+        <nz-card>
+            <nz-statistic [nzValue]="(employeeCount | number)!" [nzTitle]="'Total Employees'" [nzPrefix]="prefixTplOne"
+                [nzValueStyle]="{ color: '#3F8600' }">
+            </nz-statistic>
+            <ng-template #prefixTplOne><i nz-icon nzType="team"></i></ng-template>
+        </nz-card>
+    </div>
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12">
+        <nz-card>
+            <nz-statistic [nzValue]="(departmentCount | number)!" [nzTitle]="'Total Departments'"
+                [nzPrefix]="prefixTplTwo" [nzValueStyle]="{ color: '#CF1322' }">
+            </nz-statistic>
+            <ng-template #prefixTplTwo><i nz-icon nzType="deployment-unit"></i></ng-template>
+        </nz-card>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <nz-card nzTitle="Recent Activities">
+            <div class="text-center text-muted py-5">
+                <i nz-icon nzType="file-text" nzTheme="outline" style="font-size: 48px; opacity: 0.5;"></i>
+                <p class="mt-2">No recent activities found.</p>
+            </div>
+        </nz-card>
+    </div>
+</div>

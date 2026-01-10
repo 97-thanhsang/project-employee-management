@@ -1,0 +1,20 @@
+<div class="logo"></div>
+<ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+    <li nz-menu-item nzMatchRouter>
+        <a routerLink="/dashboard">
+            <i nz-icon nzType="dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
+    <li nz-menu-item nzMatchRouter>
+        <a routerLink="/employees">
+            <i nz-icon nzType="team"></i>
+            <span>Employees</span>
+        </a>
+    </li>
+    <!-- Future Modules -->
+    <li nz-menu-item nzDisabled>
+        <i nz-icon nzType="apartment"></i>
+        <span>Departments</span>
+    </li>
+</ul>
