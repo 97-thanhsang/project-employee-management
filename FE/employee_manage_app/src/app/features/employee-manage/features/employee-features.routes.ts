@@ -8,5 +8,29 @@ export const EMPLOYEE_FEATURES_ROUTES: Routes = [
     {
         path: 'employees',
         loadComponent: () => import('./employee-list/employee-list.component').then(m => m.EmployeeListComponent)
+    },
+    {
+        path: 'departments',
+        loadComponent: () => import('./department-list/department-list.component').then(m => m.DepartmentListComponent)
+    },
+    {
+        path: 'departments/add',
+        loadComponent: () => import('../ui/department/department-form/department-form.component').then(m => m.DepartmentFormComponent)
+    },
+    {
+        path: 'departments/:id/edit',
+        loadComponent: () => import('../ui/department/department-form/department-form.component').then(m => m.DepartmentFormComponent)
+    },
+    {
+        path: 'designations',
+        loadComponent: () => import('./designation-list/designation-list.component').then(m => m.DesignationListComponent)
+    },
+    {
+        path: 'designations/add',
+        loadComponent: () => import('../ui/designation/designation-form/designation-form.component').then(m => m.DesignationFormComponent)
+    },
+    {
+        path: 'designations/:id/edit',
+        loadComponent: () => import('../ui/designation/designation-form/designation-form.component').then(m => m.DesignationFormComponent)
     }
 ];

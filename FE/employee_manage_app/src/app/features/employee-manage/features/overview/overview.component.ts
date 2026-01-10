@@ -4,13 +4,15 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@core/auth/services/auth.service';
 import { OverviewService } from '../../services/overview.service';
 
 @Component({
     selector: 'app-employee-overview',
     standalone: true,
-    imports: [CommonModule, NzGridModule, NzCardModule, NzStatisticModule, NzIconModule],
+    imports: [CommonModule, RouterLink, NzGridModule, NzCardModule, NzStatisticModule, NzIconModule, NzButtonModule],
     templateUrl: './overview.component.html',
     styleUrls: ['./overview.component.scss']
 })
