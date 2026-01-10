@@ -1,0 +1,75 @@
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 fw-bold text-dark">
+            <span nz-icon nzType="apartment" nzTheme="outline" class="me-2 text-primary"></span>
+            Danh Sách Phòng Ban
+        </h1>
+        <a nz-button nzType="primary" routerLink="/employee-manage/departments/add">
+            <span nz-icon nzType="plus-circle"></span>
+            Thêm Mới
+        </a>
+    </div>
+
+    <!-- Error State -->
+    @if (store.error()) {
+    <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
+        (nzOnClose)="store.clearError()" class="mb-4 shadow-sm">
+    </nz-alert>
+    }
+
+    <!-- Empty State -->
+    @if (!store.hasDepartments() && !store.isLoading()) {
+    <nz-card class="text-center py-5 shadow-sm rounded-3">
+        <nz-empty nzNotFoundContent="Không có phòng ban nào. Hãy thêm phòng ban mới!" [nzNotFoundFooter]="footerTpl">
+            <ng-template #footerTpl>
+                <a nz-button nzType="primary" routerLink="/employee-manage/departments/add" class="mt-2">
+                    Thêm Phòng Ban Đầu Tiên
+                </a>
+            </ng-template>
+        </nz-empty>
+    </nz-card>
+    }
+
+    <!-- Data Table -->
+    @if (store.hasDepartments() || store.isLoading()) {
+    <nz-card [nzBordered]="false" class="shadow-sm rounded-3">
+        <nz-table #basicTable [nzData]="store.departments()" [nzLoading]="store.isLoading()" [nzPageSize]="10"
+            nzShowSizeChanger>
+            <thead>
+                <tr>
+                    <th>Tên Phòng Ban</th>
+                    <th>Trạng Thái</th>
+                    <th class="text-center">Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (data of basicTable.data; track data.departmentId) {
+                <tr>
+                    <td class="fw-semibold">{{ data.departmentName }}</td>
+                    <td>
+                        <nz-tag [nzColor]="data.isActive ? 'success' : 'error'">
+                            {{ data.isActive ? 'Active' : 'Inactive' }}
+                        </nz-tag>
+                    </td>
+                    <td class="text-center">
+                        <nz-space>
+                            <a *nzSpaceItem [appHasRole]="'Admin'"
+                                [routerLink]="['/employee-manage/departments', data.departmentId, 'edit']" nz-button
+                                nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Sửa">
+                                <span nz-icon nzType="edit"></span>
+                            </a>
+                            <button *nzSpaceItem [appHasRole]="'Admin'"
+                                (click)="onDeleteDepartment(data.departmentId, data.departmentName)" nz-button
+                                nzType="default" nzDanger nzShape="circle" nz-tooltip nzTooltipTitle="Xóa">
+                                <span nz-icon nzType="delete"></span>
+                            </button>
+                        </nz-space>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </nz-table>
+    </nz-card>
+    }
+</div>

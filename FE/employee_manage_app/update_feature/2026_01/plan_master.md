@@ -9,7 +9,7 @@
 
 | Phase | Focus Area | Complexity | Status |
 | :--- | :--- | :--- | :--- |
-| **Phase 1** | **Department Management** | Medium | 🔴 Not Started |
+| **Phase 1** | **Department Management** | Medium | � In Progress |
 | **Phase 2** | **Designation Management** | Medium | 🔴 Not Started |
 
 ## 🚀 Execution Strategy

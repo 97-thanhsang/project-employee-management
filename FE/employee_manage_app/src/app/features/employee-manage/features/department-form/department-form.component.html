@@ -1,0 +1,59 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <nz-card [nzBordered]="false" class="shadow-sm rounded-3">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                    <h4 class="mb-0 fw-bold text-primary">
+                        {{ isEditMode ? 'Cập Nhật Phòng Ban' : 'Thêm Mới Phòng Ban' }}
+                    </h4>
+                    <a nz-button nzType="link" (click)="onCancel()">
+                        <span nz-icon nzType="close"></span>
+                    </a>
+                </div>
+
+                <!-- Error State -->
+                @if (store.error()) {
+                <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
+                    (nzOnClose)="store.clearError()" class="mb-4">
+                </nz-alert>
+                }
+
+                <!-- Form -->
+                <form nz-form [formGroup]="form" (ngSubmit)="onSubmit()" nzLayout="vertical">
+                    <!-- Name -->
+                    <nz-form-item>
+                        <nz-form-label nzRequired nzFor="departmentName">Tên Phòng Ban</nz-form-label>
+                        <nz-form-control [nzErrorTip]="nameErrorTpl">
+                            <input nz-input formControlName="departmentName" id="departmentName"
+                                placeholder="Nhập tên phòng ban" />
+                            <ng-template #nameErrorTpl let-control>
+                                @if (control.hasError('required')) { Tên phòng ban là bắt buộc }
+                                @if (control.hasError('minlength')) { Tên phải dài hơn 2 ký tự }
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <!-- Is Active -->
+                    <nz-form-item>
+                        <nz-form-control>
+                            <label nz-checkbox formControlName="isActive">Kích Hoạt</label>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
+                        <button nz-button nzType="default" type="button" (click)="onCancel()"
+                            [disabled]="store.isCreating() || store.isUpdating()">
+                            Hủy
+                        </button>
+                        <button nz-button nzType="primary" type="submit"
+                            [nzLoading]="store.isCreating() || store.isUpdating()"
+                            [disabled]="!form.valid || store.isCreating() || store.isUpdating()">
+                            {{ isEditMode ? 'Cập Nhật' : 'Thêm Mới' }}
+                        </button>
+                    </div>
+                </form>
+            </nz-card>
+        </div>
+    </div>
+</div>

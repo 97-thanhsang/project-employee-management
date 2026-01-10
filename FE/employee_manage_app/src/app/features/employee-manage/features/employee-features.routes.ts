@@ -8,5 +8,17 @@ export const EMPLOYEE_FEATURES_ROUTES: Routes = [
     {
         path: 'employees',
         loadComponent: () => import('./employee-list/employee-list.component').then(m => m.EmployeeListComponent)
+    },
+    {
+        path: 'departments',
+        loadComponent: () => import('./department-list/department-list.component').then(m => m.DepartmentListComponent)
+    },
+    {
+        path: 'departments/add',
+        loadComponent: () => import('./department-form/department-form.component').then(m => m.DepartmentFormComponent)
+    },
+    {
+        path: 'departments/:id/edit',
+        loadComponent: () => import('./department-form/department-form.component').then(m => m.DepartmentFormComponent)
     }
 ];
