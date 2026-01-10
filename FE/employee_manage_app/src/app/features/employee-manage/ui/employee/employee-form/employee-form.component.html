@@ -1,269 +1,164 @@
-<div class="container mt-5">
+<div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
-      <!-- Card Header -->
-      <div class="card">
-        <div class="card-header bg-primary text-white">
-          <h4 class="mb-0">
+      <nz-card [nzBordered]="false" class="shadow-sm rounded-3">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+          <h4 class="mb-0 fw-bold text-primary">
             {{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}
           </h4>
+          <a nz-button nzType="link" (click)="onCancel()">
+            <span nz-icon nzType="close"></span>
+          </a>
         </div>
 
         <!-- Loading State -->
         @if (store.isMasterDataLoading()) {
-          <div class="card-body text-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2">Loading master data...</p>
-          </div>
+        <div class="text-center py-5">
+          <nz-spin nzTip="Loading master data..." nzSize="large"></nz-spin>
+        </div>
         }
 
         <!-- Error State -->
         @if (store.error()) {
-          <div class="alert alert-danger m-3">
-            <strong>Error:</strong> {{ store.error() }}
-            <button
-              type="button"
-              class="btn-close"
-              (click)="store.clearError()">
-            </button>
-          </div>
+        <nz-alert nzType="error" nzMessage="Error" [nzDescription]="store.error()!" nzShowIcon nzCloseable
+          (nzOnClose)="store.clearError()" class="mb-4">
+        </nz-alert>
         }
 
         <!-- Form -->
         @if (!store.isMasterDataLoading()) {
-          <div class="card-body">
-            <form [formGroup]="form" (ngSubmit)="onSubmit()">
-              <!-- Row 1: Name & Email -->
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="name" class="form-label">
-                    Name <span class="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="name"
-                    formControlName="name"
-                    [class.is-invalid]="hasError('name', 'required')"
-                    placeholder="Enter full name">
-                  @if (hasError('name', 'required')) {
-                    <div class="invalid-feedback">
-                      Name is required
-                    </div>
-                  }
-                  @if (hasError('name', 'minlength')) {
-                    <div class="invalid-feedback">
-                      Name must be at least 3 characters
-                    </div>
-                  }
-                </div>
+        <form nz-form [formGroup]="form" (ngSubmit)="onSubmit()" nzLayout="vertical">
+          <!-- Row 1: Name & Email -->
+          <div class="row">
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="name">Name</nz-form-label>
+                <nz-form-control [nzErrorTip]="nameErrorTpl">
+                  <input nz-input formControlName="name" id="name" placeholder="Enter full name" />
+                  <ng-template #nameErrorTpl let-control>
+                    @if (control.hasError('required')) { Name is required }
+                    @if (control.hasError('minlength')) { Name must be > 3 chars }
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
 
-                <div class="col-md-6 mb-3">
-                  <label for="email" class="form-label">
-                    Email <span class="text-danger">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    formControlName="email"
-                    [class.is-invalid]="hasError('email', 'required') || hasError('email', 'email')"
-                    placeholder="Enter email">
-                  @if (hasError('email', 'required')) {
-                    <div class="invalid-feedback">
-                      Email is required
-                    </div>
-                  }
-                  @if (hasError('email', 'email')) {
-                    <div class="invalid-feedback">
-                      Enter a valid email address
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <!-- Row 2: Phone & Salary -->
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="contactNo" class="form-label">
-                    Phone <span class="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="contactNo"
-                    formControlName="contactNo"
-                    [class.is-invalid]="hasError('contactNo', 'required') || hasError('contactNo', 'pattern')"
-                    placeholder="10-digit phone number">
-                  @if (hasError('contactNo', 'required')) {
-                    <div class="invalid-feedback">
-                      Phone is required
-                    </div>
-                  }
-                  @if (hasError('contactNo', 'pattern')) {
-                    <div class="invalid-feedback">
-                      Phone must be 10 digits
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <!-- Row 3: Designation -->
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="designationId" class="form-label">
-                    Designation <span class="text-danger">*</span>
-                  </label>
-                  <select
-                    class="form-select"
-                    id="designationId"
-                    formControlName="designationId"
-                    [class.is-invalid]="hasError('designationId', 'required')">
-                    <option value="">-- Select Designation --</option>
-                    @for (des of store.designationOptions(); track des.id) {
-                      <option [value]="des.id">{{ des.name }}</option>
-                    }
-                  </select>
-                  @if (hasError('designationId', 'required')) {
-                    <div class="invalid-feedback">
-                      Designation is required
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <!-- Row 4: Address -->
-              <div class="mb-3">
-                <label for="address" class="form-label">
-                  Address <span class="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="address"
-                  formControlName="address"
-                  [class.is-invalid]="hasError('address', 'required')"
-                  placeholder="Enter full address">
-                @if (hasError('address', 'required')) {
-                  <div class="invalid-feedback">
-                    Address is required
-                  </div>
-                }
-              </div>
-
-              <!-- Row 5: City, State, Pincode -->
-              <div class="row">
-                <div class="col-md-4 mb-3">
-                  <label for="city" class="form-label">
-                    City <span class="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="city"
-                    formControlName="city"
-                    [class.is-invalid]="hasError('city', 'required')"
-                    placeholder="City">
-                  @if (hasError('city', 'required')) {
-                    <div class="invalid-feedback">
-                      City is required
-                    </div>
-                  }
-                </div>
-
-                <div class="col-md-4 mb-3">
-                  <label for="state" class="form-label">
-                    State <span class="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="state"
-                    formControlName="state"
-                    [class.is-invalid]="hasError('state', 'required')"
-                    placeholder="State">
-                  @if (hasError('state', 'required')) {
-                    <div class="invalid-feedback">
-                      State is required
-                    </div>
-                  }
-                </div>
-
-                <div class="col-md-4 mb-3">
-                  <label for="pincode" class="form-label">
-                    Pincode <span class="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="pincode"
-                    formControlName="pincode"
-                    [class.is-invalid]="hasError('pincode', 'required') || hasError('pincode', 'pattern')"
-                    placeholder="6-digit pincode">
-                  @if (hasError('pincode', 'required')) {
-                    <div class="invalid-feedback">
-                      Pincode is required
-                    </div>
-                  }
-                  @if (hasError('pincode', 'pattern')) {
-                    <div class="invalid-feedback">
-                      Pincode must be 6 digits
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <!-- Row 6: Password -->
-              <div class="mb-3">
-                <label for="password" class="form-label">
-                  Password <span class="text-danger">*</span>
-                  <small class="text-muted">{{ isEditMode ? '(Leave empty to keep current)' : '(Min 6 characters)' }}</small>
-                </label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  formControlName="password"
-                  [class.is-invalid]="hasError('password', 'required') || hasError('password', 'minlength')"
-                  placeholder="Enter password"
-                  [required]="!isEditMode">
-                @if (hasError('password', 'required')) {
-                  <div class="invalid-feedback">
-                    Password is required
-                  </div>
-                }
-                @if (hasError('password', 'minlength')) {
-                  <div class="invalid-feedback">
-                    Password must be at least 6 characters
-                  </div>
-                }
-              </div>
-
-              <!-- Form Actions -->
-              <div class="d-flex gap-2 mt-4">
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                  [disabled]="!form.valid || isSubmitting || store.isMasterDataLoading()">
-                  @if (isSubmitting) {
-                    <span class="spinner-border spinner-border-sm me-2"></span>
-                  }
-                  {{ isEditMode ? 'Update' : 'Create' }}
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  (click)="onCancel()"
-                  [disabled]="isSubmitting">
-                  Cancel
-                </button>
-              </div>
-            </form>
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="email">Email</nz-form-label>
+                <nz-form-control [nzErrorTip]="emailErrorTpl">
+                  <input nz-input formControlName="email" id="email" placeholder="Enter email" />
+                  <ng-template #emailErrorTpl let-control>
+                    @if (control.hasError('required')) { Email is required }
+                    @if (control.hasError('email')) { Invalid email format }
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
           </div>
+
+          <!-- Row 2: Phone -->
+          <div class="row">
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="contactNo">Phone</nz-form-label>
+                <nz-form-control [nzErrorTip]="phoneErrorTpl">
+                  <input nz-input formControlName="contactNo" id="contactNo" placeholder="10-digit number" />
+                  <ng-template #phoneErrorTpl let-control>
+                    @if (control.hasError('required')) { Phone is required }
+                    @if (control.hasError('pattern')) { Must be 10 digits }
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <!-- Row 3: Designation -->
+          <div class="row">
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="designationId">Designation</nz-form-label>
+                <nz-form-control [nzErrorTip]="'Please select a designation'">
+                  <nz-select formControlName="designationId" nzPlaceHolder="Select Designation">
+                    @for (des of store.designationOptions(); track des.id) {
+                    <nz-option [nzValue]="des.id" [nzLabel]="des.name"></nz-option>
+                    }
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <!-- Row 4: Address -->
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="address">Address</nz-form-label>
+            <nz-form-control [nzErrorTip]="'Address is required'">
+              <input nz-input formControlName="address" id="address" placeholder="Enter full address" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <!-- Row 5: City, State, Pincode -->
+          <div class="row">
+            <div class="col-md-4">
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="city">City</nz-form-label>
+                <nz-form-control [nzErrorTip]="'City is required'">
+                  <input nz-input formControlName="city" id="city" placeholder="City" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div class="col-md-4">
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="state">State</nz-form-label>
+                <nz-form-control [nzErrorTip]="'State is required'">
+                  <input nz-input formControlName="state" id="state" placeholder="State" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div class="col-md-4">
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="pincode">Pincode</nz-form-label>
+                <nz-form-control [nzErrorTip]="pincodeErrorTpl">
+                  <input nz-input formControlName="pincode" id="pincode" placeholder="6-digit pincode" />
+                  <ng-template #pincodeErrorTpl let-control>
+                    @if (control.hasError('required')) { Pincode required }
+                    @if (control.hasError('pattern')) { Must be 6 digits }
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <!-- Row 6: Password -->
+          <nz-form-item>
+            <nz-form-label [nzRequired]="!isEditMode" nzFor="password">
+              Password
+              <small class="text-muted ms-2 font-weight-normal">
+                {{ isEditMode ? '(Leave empty to keep current)' : '(Min 6 chars)' }}
+              </small>
+            </nz-form-label>
+            <nz-form-control [nzErrorTip]="passwordErrorTpl">
+              <input nz-input type="password" formControlName="password" id="password" placeholder="Enter password" />
+              <ng-template #passwordErrorTpl let-control>
+                @if (control.hasError('required')) { Password is required }
+                @if (control.hasError('minlength')) { Must be >= 6 chars }
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+
+          <!-- Form Actions -->
+          <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
+            <button nz-button nzType="default" type="button" (click)="onCancel()" [disabled]="isSubmitting">
+              Cancel
+            </button>
+            <button nz-button nzType="primary" type="submit" [nzLoading]="isSubmitting"
+              [disabled]="!form.valid || isSubmitting || store.isMasterDataLoading()">
+              {{ isEditMode ? 'Update' : 'Create' }}
+            </button>
+          </div>
+        </form>
         }
-      </div>
+      </nz-card>
     </div>
   </div>
 </div>

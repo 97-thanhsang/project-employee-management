@@ -5,11 +5,31 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { EmployeeStore } from '../../../store/employee.store';
 import { CreateEmployeeRequest, UpdateEmployeeRequest } from '../../../models';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    NzFormModule,
+    NzInputModule,
+    NzSelectModule,
+    NzButtonModule,
+    NzCardModule,
+    NzSpinModule,
+    NzAlertModule,
+    NzIconModule
+  ],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -153,7 +173,7 @@ export class EmployeeFormComponent implements OnInit {
     // Reset submitting state and navigate back
     setTimeout(() => {
       this.isSubmitting = false;
-      this.router.navigate(['/employees']);
+      this.router.navigate(['/employee-manage/employees']);
     }, 1000);
   }
 
@@ -161,7 +181,7 @@ export class EmployeeFormComponent implements OnInit {
    * Go back to employee list
    */
   onCancel(): void {
-    this.router.navigate(['/employees']);
+    this.router.navigate(['/employee-manage/employees']);
   }
 
   /**

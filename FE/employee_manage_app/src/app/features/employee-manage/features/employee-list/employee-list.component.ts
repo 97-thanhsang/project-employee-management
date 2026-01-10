@@ -4,7 +4,18 @@ import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { EmployeeStore } from '../../store/employee.store';
 import { Employee, Designation } from '../../models';
-import { HasRoleDirective } from '@shared/directives';
+import { HasRoleDirective } from '@shared/directives/has-role.directive';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { DesignationNamePipe } from '@shared/pipes';
 
 /**
@@ -21,12 +32,26 @@ import { DesignationNamePipe } from '@shared/pipes';
  *
  * Change Detection: OnPush (performance optimization)
  */
-import { NzIconModule } from 'ng-zorro-antd/icon';
-
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, HasRoleDirective, DesignationNamePipe, NzIconModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    HasRoleDirective,
+    DesignationNamePipe,
+    NzIconModule,
+    NzTableModule,
+    NzTagModule,
+    NzButtonModule,
+    NzCardModule,
+    NzAlertModule,
+    NzDividerModule,
+    NzSpinModule,
+    NzEmptyModule,
+    NzTooltipModule,
+    NzSpaceModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']

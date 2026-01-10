@@ -1,18 +1,22 @@
-<div class="logo"></div>
-<ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+<div class="logo d-flex align-items-center justify-content-center h-64px bg-dark text-white shadow-sm"
+    style="height: 64px;">
+    <h4 class="m-0 text-white fw-bold" *ngIf="!isCollapsed">Antigravity</h4>
+    <h4 class="m-0 text-white fw-bold" *ngIf="isCollapsed">AG</h4>
+</div>
+<ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="border-0">
     <li nz-menu-item nzMatchRouter>
-        <a routerLink="/dashboard">
-            <i nz-icon nzType="home"></i>
+        <a routerLink="/dashboard" class="text-decoration-none">
+            <span nz-icon nzType="home"></span>
             <span>Portal</span>
         </a>
     </li>
     <li nz-submenu nzTitle="Employee Manage" nzIcon="team">
         <ul>
             <li nz-menu-item nzMatchRouter>
-                <a routerLink="/employee-manage/overview">Overview</a>
+                <a routerLink="/employee-manage/overview" class="text-decoration-none">Overview</a>
             </li>
             <li nz-menu-item nzMatchRouter>
-                <a routerLink="/employee-manage/employees">Employee List</a>
+                <a routerLink="/employee-manage/employees" class="text-decoration-none">Employee List</a>
             </li>
             <li nz-menu-item nzDisabled>
                 <span>Departments</span>
