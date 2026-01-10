@@ -1,191 +1,118 @@
-# Employee Management System - Frontend
+<div align="center">
 
-Angular 17+ Standalone Components with Signal-based State Management.
+# 🏢 Employee Management System (Enterprise)
 
-## 📚 Documentation
+[![Angular](https://img.shields.io/badge/Angular-21.0-dd0031.svg?style=flat&logo=angular)](https://angular.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6.svg?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Ant Design](https://img.shields.io/badge/Ant%20Design-19.0-1890ff.svg?style=flat&logo=ant-design)](https://ng.ant.design/)
+[![State Management](https://img.shields.io/badge/State-Signals-green.svg)](https://angular.dev/guide/signals)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Start here:** [DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md)
+**A high-performance, scalable Enterprise Application built with modern Angular Architecture.**
+*Strict Typing • Signal Store • Unidirectional Data Flow • Feature-based Architecture*
 
-### Quick Links
-- **[PHASE_1_FINAL_SUMMARY.md](./PHASE_1_FINAL_SUMMARY.md)** - Project completion status
-- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - Quick start & API reference
-- **[PHASE_1_IMPLEMENTATION.md](./PHASE_1_IMPLEMENTATION.md)** - Complete implementation guide
-- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - Testing examples & instructions
+[Features](#-features) • [Architecture](#-architecture) • [Getting Started](#-getting-started) • [Documentation](#-documentation)
 
-## 🚀 Quick Start
+</div>
+
+---
+
+## 🌟 Overview
+
+This project demonstrates a **Production-Ready** approach to building large-scale Angular applications. It moves beyond standard tutorials by implementing strict Enterprise patterns:
+
+- **Signal-based State Management**: No complex RxJS boilerplate for state. Granular updates with Angular Signals.
+- **Strict Architecture**: Clear separation between `Features`, `UI (Dumb Components)`, and `Data Access (Smart Stores)`.
+- **Type Safety**: 100% Strict Mode. Custom `AppError` handling.
+- **Modern UX**: Ant Design components with optimized interactions (Skeleton loaders, Toasts).
+
+## ✨ Features
+
+### 👥 Employee Management (Core)
+- **CRUD Operations**: Full Create, Read, Update, Delete lifecycle.
+- **Reactive Forms**: Complex validation & dirty checking.
+- **Smart Feedback**: Loading states (`isCreating`, `isUpdating`) & Optimistic UI updates.
+
+### 🏢 Department & Designation (Master Data)
+- **Relationship Mapping**: Employees linked to Departments & Designations.
+- **Master Data Management**: Dedicated CRUD modules for organizational structure.
+- **Dynamic Dropdowns**: Context-aware selection in forms.
+
+## 🏗️ Technical Architecture
+
+We follow a **Modular Feature Architecture** designed for scalability:
+
+```mermaid
+graph TD
+    UI[UI Component <br> Dumb/Pure] -->|Inputs/Outputs| Container[Feature Container <br> Smart]
+    Container -->|Calls| Facade[Facade / Signal Store]
+    Facade -->|Http| Service[API Service]
+    Service -->|JSON| API[Backend API .NET 8]
+```
+
+### Key Technologies
+| Category | Stack | Description |
+| :--- | :--- | :--- |
+| **Framework** | Angular 21 | Standalone Components, Signals, Control Flow (`@if`, `@for`). |
+| **State** | Signal Store | Custom lightweight store pattern (similar to NgRx SignalStore). |
+| **UI Library** | Ant Design (NG-ZORRO) | Enterprise-class UI components. |
+| **Styling** | SCSS / Bootstrap 5 | Utility classes & custom theming. |
+| **Tooling** | Vitest, ESLint | Modern testing & linting. |
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- Angular CLI 17+
-- Backend API running at `http://localhost:5000`
+- Node.js `v18+`
+- Angular CLI `v21+`
 
-### Installation & Running
+### Installation
+
 ```bash
+# Clone the repository
+git clone https://github.com/your-username/employee-manage-app.git
+
+# Navigate to project
+cd employee-manage-app
+
+# Install dependencies
 npm install
-ng serve --port 4201
+
+# Run development server
+ng serve
 ```
 
-Navigate to `http://localhost:4201/`
+Navigate to `http://localhost:4201/`.
 
-## 🏗️ Architecture
+## 📚 Documentation Index
 
-### Layered Design
-```
-UI Components (Standalone)
-    ↓ injects
-EmployeeStore (Signal-based State)
-    ↓ calls
-EmployeeService (HTTP/API Layer)
-    ↓
-Backend API (.NET 8.0)
-```
+| Doc | Description |
+| :--- | :--- |
+| [**PHASE_1_SUMMARY**](./PHASE_1_FINAL_SUMMARY.md) | Completion status of Core Modules. |
+| [**QUICK_REFERENCE**](./QUICK_REFERENCE.md) | API Endpoints & Developer Cheat Sheet. |
+| [**ARCHITECTURE**](./update_core/core/architecture/architecture_excellence.md) | **Recommended Read**: Deep dive into "Excellent" Architecture patterns. |
+| [**UPGRADE PLAN**](./update_core/core/architecture/phased_upgrade_plan.md) | Roadmap for 2026 Enterprise Upgrade (Micro-phases). |
 
-### Key Features
-- ✅ Signal-based state management (no RxJS)
-- ✅ Type-safe (0% `any` usage)
-- ✅ OnPush change detection ready
-- ✅ Clean architecture & separation of concerns
-- ✅ Production-ready code
-
-## 🎯 Phase 1: Core (COMPLETE ✅)
-
-### Completed
-- [x] Setup Interceptor (Auth)
-- [x] Setup Base Models (7 interfaces)
-- [x] EmployeeService (5 CRUD methods)
-- [x] EmployeeStore (8 actions, 7 signals)
-
-### File Structure
-```
-src/app/core/
-├── models/
-│   ├── api-response.model.ts
-│   ├── employee.model.ts
-│   ├── department.model.ts
-│   ├── designation.model.ts
-│   └── index.ts
-├── services/
-│   └── employee.service.ts
-└── store/
-    └── employee.store.ts
-```
-
-## 💡 Usage Example
-
-```typescript
-import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { EmployeeStore } from '@core/store/employee.store';
-
-@Component({
-  selector: 'app-employees',
-  standalone: true,
-  imports: [CommonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div *ngIf="store.isLoading()">Loading...</div>
-    <div *ngIf="store.isError()">{{ store.error() }}</div>
-    <table *ngIf="store.hasEmployees()">
-      <tr *ngFor="let emp of store.employees()">
-        <td>{{ emp.name }}</td>
-      </tr>
-    </table>
-  `
-})
-export class EmployeesComponent implements OnInit {
-  store = inject(EmployeeStore);
-
-  ngOnInit() {
-    this.store.loadEmployees();
-  }
-}
-```
-
-## 📖 Store API
-
-### Read Signals
-```typescript
-store.employees()           // Employee[]
-store.isLoading()          // boolean
-store.error()              // string | null
-store.selectedEmployee()   // Employee | null
-```
-
-### Actions
-```typescript
-store.loadEmployees()
-store.addEmployee(payload)
-store.updateEmployee(id, payload)
-store.deleteEmployee(id)
-store.selectEmployee(emp)
-```
-
-## 🔄 Development Workflow
-
-### Common Tasks
-```bash
-# Start development server
-ng serve --port 4201
-
-# Build for production
-ng build --configuration production
-
-# Run tests
-ng test
-
-# Run linting
-ng lint
-```
-
-## 📚 Resources
-
-- **[Angular Documentation](https://angular.io)**
-- **[Angular Signals Guide](https://angular.io/guide/signals)**
-- **[Backend API Documentation](../../BE/Employee.api/backend_api_summary.md)**
-
-## 🐛 Troubleshooting
-
-See [QUICK_REFERENCE.md - Common Issues](./QUICK_REFERENCE.md#-common-issues)
-
-## 📝 Phase 2 (Upcoming)
-
-Next: Build UI Components
-- EmployeeListComponent
-- EmployeeDetailComponent
-- EmployeeFormComponent
-- DepartmentStore & Service
-- DesignationStore & Service
-
-## 📄 Further Help
-
-To get more help on the Angular CLI, use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-
-To build the project run:
+## 🧪 Testing
 
 ```bash
-ng build
+# Unit Tests (Vitest)
+npm run test
+
+# End-to-End
+npm run e2e
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🗺️ Roadmap (2026 Upgrade)
 
-## Running unit tests
+We are currently executing an **Architecture Excellence** upgrade:
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+- [ ] **Phase 1**: Global Interceptors & Resilience Foundation.
+- [ ] **Phase 2**: Strict Smart/Dumb Component Refactoring.
+- [ ] **Phase 3**: Facade Pattern Implementation.
+- [ ] **Phase 4**: Security Hardening (Auto-Refresh Token).
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+<div align="center">
+  <sub>Built with ❤️ by the Architecture Team.</sub>
+</div>
