@@ -4,7 +4,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { DashboardService } from './dashboard.service';
 
 @Component({
