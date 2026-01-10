@@ -4,6 +4,10 @@ import { EmployeeFormComponent } from './features/employee/employee-form/employe
 
 export const routes: Routes = [
   {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
+  },
+  {
     path: 'employees',
     children: [
       {
@@ -22,7 +26,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/employees',
+    redirectTo: '/login',
     pathMatch: 'full'
   }
 ];
