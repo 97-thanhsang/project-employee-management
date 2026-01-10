@@ -2,8 +2,8 @@ import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
-import { EmployeeStore } from '../../store/employee.store';
-import { Employee, Designation } from '../../models';
+import { EmployeeStore } from '@features/employee-manage/store/employee.store';
+import { Employee, Designation } from '@features/employee-manage/models';
 import { HasRoleDirective } from '@shared/directives/has-role.directive';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';

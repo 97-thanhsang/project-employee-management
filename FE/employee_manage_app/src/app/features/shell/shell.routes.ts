@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { MainLayoutComponent } from '../../core/layout/main-layout/main-layout.component';
-import { authGuard } from '../../core/guards/auth.guard';
+import { MainLayoutComponent } from '@core/layout/main-layout/main-layout.component';
+import { authGuard } from '@core/guards/auth.guard';
 
 export const SHELL_ROUTES: Routes = [
     {
@@ -10,7 +10,7 @@ export const SHELL_ROUTES: Routes = [
         children: [
             {
                 path: 'dashboard',
-                loadComponent: () => import('../../core/dashboard/dashboard.component').then(m => m.DashboardComponent)
+                loadComponent: () => import('@core/dashboard/dashboard.component').then(m => m.DashboardComponent)
             },
             {
                 path: 'employee-manage',

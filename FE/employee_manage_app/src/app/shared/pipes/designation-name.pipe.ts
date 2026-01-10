@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Designation } from '../../features/employee-manage/models';
+import { Designation } from '@features/employee-manage/models';
 
 /**
  * DesignationNamePipe
