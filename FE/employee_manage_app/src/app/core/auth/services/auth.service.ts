@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../../environments/environment';
-import { ApiResponse } from '../../models/api-response.model';
+import { ApiResponse } from '@core/models/api-response.model';
 
 /**
  * User Role Enum

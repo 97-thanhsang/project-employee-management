@@ -3,13 +3,33 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { EmployeeStore } from '../../../store/employee.store';
-import { CreateEmployeeRequest, UpdateEmployeeRequest } from '../../../models';
+import { EmployeeStore } from '@features/employee-manage/store/employee.store';
+import { CreateEmployeeRequest, UpdateEmployeeRequest } from '@features/employee-manage/models';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    NzFormModule,
+    NzInputModule,
+    NzSelectModule,
+    NzButtonModule,
+    NzCardModule,
+    NzSpinModule,
+    NzAlertModule,
+    NzIconModule
+  ],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -26,8 +46,7 @@ export class EmployeeFormComponent implements OnInit {
   isEditMode = false;
   employeeId: number | null = null;
 
-  // Track submit state
-  isSubmitting = false;
+
 
   ngOnInit(): void {
     // Initialize form
@@ -99,11 +118,10 @@ export class EmployeeFormComponent implements OnInit {
    * Submit form (Create or Update)
    */
   onSubmit(): void {
-    if (!this.form.valid || this.isSubmitting) {
+    if (!this.form.valid || this.store.isCreating() || this.store.isUpdating()) {
       return;
     }
 
-    this.isSubmitting = true;
     const formValue = this.form.value;
     const currentDate = new Date().toISOString(); // ISO format: 2024-01-10T12:30:45.123Z
 
@@ -129,7 +147,9 @@ export class EmployeeFormComponent implements OnInit {
         updatePayload.password = formValue.password;
       }
 
-      this.store.updateEmployee(this.employeeId, updatePayload);
+      this.store.updateEmployee(this.employeeId, updatePayload, () => {
+        this.router.navigate(['/employee-manage/employees']);
+      });
     } else {
       // Create mode (password required)
       const createPayload: CreateEmployeeRequest = {
@@ -147,21 +167,17 @@ export class EmployeeFormComponent implements OnInit {
         modifiedDate: currentDate  // Set to current date when creating
       };
 
-      this.store.addEmployee(createPayload);
+      this.store.addEmployee(createPayload, () => {
+        this.router.navigate(['/employee-manage/employees']);
+      });
     }
-
-    // Reset submitting state and navigate back
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.router.navigate(['/employees']);
-    }, 1000);
   }
 
   /**
    * Go back to employee list
    */
   onCancel(): void {
-    this.router.navigate(['/employees']);
+    this.router.navigate(['/employee-manage/employees']);
   }
 
   /**

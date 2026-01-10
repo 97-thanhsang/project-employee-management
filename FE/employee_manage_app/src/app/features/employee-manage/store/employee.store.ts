@@ -13,6 +13,8 @@ import { EmployeeService } from '../services/employee.service';
 import { DepartmentService } from '../services/department.service';
 import { DesignationService } from '../services/designation.service';
 import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest, Department, Designation } from '../models';
+import { AppError } from '@core/models/app-error.model';
+import { mapToAppError } from '@core/utils/error.utils';
 
 /**
  * State Interface
@@ -21,7 +23,7 @@ import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest, Department, Des
 interface EmployeeState {
   employees: Employee[];
   loading: boolean;
-  error: string | null;
+  error: AppError | null;
   selectedEmployee: Employee | null;
   totalCount: number; // Cho pagination
   departments: Department[];
@@ -60,7 +62,7 @@ export class EmployeeStore {
   private loadingSignal: WritableSignal<boolean> = signal(false);
 
   /** Error message */
-  private errorSignal: WritableSignal<string | null> = signal(null);
+  private errorSignal: WritableSignal<AppError | null> = signal(null);
 
   /** Nhân viên được chọn (chi tiết) */
   private selectedEmployeeSignal: WritableSignal<Employee | null> = signal(null);
@@ -77,6 +79,15 @@ export class EmployeeStore {
   /** Master data loading state */
   private masterDataLoadingSignal: WritableSignal<boolean> = signal(false);
 
+  /** Creating state */
+  private isCreatingSignal: WritableSignal<boolean> = signal(false);
+
+  /** Updating state */
+  private isUpdatingSignal: WritableSignal<boolean> = signal(false);
+
+  /** Deleting state */
+  private isDeletingSignal: WritableSignal<boolean> = signal(false);
+
   // ============= DERIVED/COMPUTED SIGNALS (PUBLIC READ-ONLY) =============
 
   /**
@@ -88,7 +99,27 @@ export class EmployeeStore {
   /**
    * Expose read-only loading state
    */
-  readonly isLoading = computed(() => this.loadingSignal());
+  readonly isLoading = computed(() =>
+    this.loadingSignal() ||
+    this.isCreatingSignal() ||
+    this.isUpdatingSignal() ||
+    this.isDeletingSignal()
+  );
+
+  /**
+   * Expose read-only creating state
+   */
+  readonly isCreating = computed(() => this.isCreatingSignal());
+
+  /**
+   * Expose read-only updating state
+   */
+  readonly isUpdating = computed(() => this.isUpdatingSignal());
+
+  /**
+   * Expose read-only deleting state
+   */
+  readonly isDeleting = computed(() => this.isDeletingSignal());
 
   /**
    * Expose read-only error
@@ -191,11 +222,11 @@ export class EmployeeStore {
           this.masterDataLoadingSignal.set(false);
         });
       },
-      error: (error) => {
+
+      error: (err) => {
         // Error: update error signal
         this.ngZone.run(() => {
-          const errorMessage = error?.error?.message || 'Failed to load master data';
-          this.errorSignal.set(errorMessage);
+          this.errorSignal.set(mapToAppError(err, 'Failed to load master data'));
           this.masterDataLoadingSignal.set(false);
         });
       }
@@ -242,11 +273,11 @@ export class EmployeeStore {
             this.loadingSignal.set(false);
           });
         },
-        error: (error) => {
+
+        error: (err) => {
           // Error: update error signal
           this.ngZone.run(() => {
-            const errorMessage = error?.error?.message || 'Failed to load employees';
-            this.errorSignal.set(errorMessage);
+            this.errorSignal.set(mapToAppError(err, 'Failed to load employees'));
             this.loadingSignal.set(false);
           });
         }
@@ -269,10 +300,10 @@ export class EmployeeStore {
           this.loadingSignal.set(false);
         });
       },
-      error: (error) => {
+
+      error: (err) => {
         this.ngZone.run(() => {
-          const errorMessage = error?.error?.message || 'Failed to load employee';
-          this.errorSignal.set(errorMessage);
+          this.errorSignal.set(mapToAppError(err, 'Failed to load employee'));
           this.loadingSignal.set(false);
         });
       }
@@ -283,9 +314,10 @@ export class EmployeeStore {
    * Thêm nhân viên mới
    *
    * @param payload CreateEmployeeRequest
+   * @param onSuccess Callback khi thành công
    */
-  addEmployee(payload: CreateEmployeeRequest): void {
-    this.loadingSignal.set(true);
+  addEmployee(payload: CreateEmployeeRequest, onSuccess?: () => void): void {
+    this.isCreatingSignal.set(true);
     this.errorSignal.set(null);
 
     this.employeeService.createEmployee(payload).subscribe({
@@ -294,18 +326,22 @@ export class EmployeeStore {
         const currentEmployees = this.employeesSignal();
         this.employeesSignal.set([...currentEmployees, response.data]);
         this.totalCountSignal.set(currentEmployees.length + 1);
-        this.loadingSignal.set(false);
+        this.isCreatingSignal.set(false);
 
         // Show success toast
         this.toastrService.success('Nhân viên đã được tạo thành công!', 'Thành công');
+
+        // Execute callback
+        if (onSuccess) onSuccess();
       },
-      error: (error) => {
-        const errorMessage = error?.error?.message || 'Không thể tạo nhân viên';
-        this.errorSignal.set(errorMessage);
-        this.loadingSignal.set(false);
+
+      error: (err) => {
+        const errorObj = mapToAppError(err, 'Không thể tạo nhân viên');
+        this.errorSignal.set(errorObj);
+        this.isCreatingSignal.set(false);
 
         // Show error toast
-        this.toastrService.error(errorMessage, 'Lỗi');
+        this.toastrService.error(errorObj.message, 'Lỗi');
       }
     });
   }
@@ -315,9 +351,10 @@ export class EmployeeStore {
    *
    * @param employeeId ID của nhân viên
    * @param payload UpdateEmployeeRequest
+   * @param onSuccess Callback khi thành công
    */
-  updateEmployee(employeeId: number, payload: UpdateEmployeeRequest): void {
-    this.loadingSignal.set(true);
+  updateEmployee(employeeId: number, payload: UpdateEmployeeRequest, onSuccess?: () => void): void {
+    this.isUpdatingSignal.set(true);
     this.errorSignal.set(null);
 
     this.employeeService.updateEmployee(employeeId, payload).subscribe({
@@ -335,18 +372,22 @@ export class EmployeeStore {
           this.selectedEmployeeSignal.set(response.data);
         }
 
-        this.loadingSignal.set(false);
+        this.isUpdatingSignal.set(false);
 
         // Show success toast
         this.toastrService.success('Nhân viên đã được cập nhật thành công!', 'Thành công');
+
+        // Execute callback
+        if (onSuccess) onSuccess();
       },
-      error: (error) => {
-        const errorMessage = error?.error?.message || 'Không thể cập nhật nhân viên';
-        this.errorSignal.set(errorMessage);
-        this.loadingSignal.set(false);
+
+      error: (err) => {
+        const errorObj = mapToAppError(err, 'Không thể cập nhật nhân viên');
+        this.errorSignal.set(errorObj);
+        this.isUpdatingSignal.set(false);
 
         // Show error toast
-        this.toastrService.error(errorMessage, 'Lỗi');
+        this.toastrService.error(errorObj.message, 'Lỗi');
       }
     });
   }
@@ -357,7 +398,7 @@ export class EmployeeStore {
    * @param employeeId ID của nhân viên cần xóa
    */
   deleteEmployee(employeeId: number): void {
-    this.loadingSignal.set(true);
+    this.isDeletingSignal.set(true);
     this.errorSignal.set(null);
 
     this.employeeService.deleteEmployee(employeeId).subscribe({
@@ -374,18 +415,19 @@ export class EmployeeStore {
           this.selectedEmployeeSignal.set(null);
         }
 
-        this.loadingSignal.set(false);
+        this.isDeletingSignal.set(false);
 
         // Show success toast
         this.toastrService.success('Nhân viên đã được xóa thành công!', 'Thành công');
       },
-      error: (error) => {
-        const errorMessage = error?.error?.message || 'Không thể xóa nhân viên';
-        this.errorSignal.set(errorMessage);
-        this.loadingSignal.set(false);
+
+      error: (err) => {
+        const errorObj = mapToAppError(err, 'Không thể xóa nhân viên');
+        this.errorSignal.set(errorObj);
+        this.isDeletingSignal.set(false);
 
         // Show error toast
-        this.toastrService.error(errorMessage, 'Lỗi');
+        this.toastrService.error(errorObj.message, 'Lỗi');
       }
     });
   }
@@ -424,4 +466,6 @@ export class EmployeeStore {
   deselectEmployee(): void {
     this.selectedEmployeeSignal.set(null);
   }
+
+
 }

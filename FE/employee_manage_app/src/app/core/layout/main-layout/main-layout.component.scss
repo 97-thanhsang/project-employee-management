@@ -1,42 +1,26 @@
-.app-layout {
+.sidebar-wrapper {
+    transition: width 0.3s ease;
+    width: 250px;
     height: 100vh;
-}
+    overflow-y: auto;
+    flex-shrink: 0;
 
-.menu-sidebar {
-    position: relative;
-    z-index: 10;
-    min-height: 100vh;
-    box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
-}
-
-.inner-content {
-    padding: 24px;
-    background: #fff;
-    min-height: 360px;
-}
-
-nz-header {
-    padding: 0;
-    width: 100%;
-    z-index: 2;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
-}
-
-nz-content {
-    margin: 24px 16px 0;
-    overflow: initial;
-
-    // Mobile adjustment
-    @media (max-width: 576px) {
-        margin: 16px 8px 0;
-
-        .inner-content {
-            padding: 16px;
-        }
+    &.collapsed {
+        width: 0;
+        overflow: hidden;
     }
 }
 
-nz-footer {
-    text-align: center;
+main {
+    transition: all 0.3s ease;
+}
+
+header {
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+    z-index: 1000;
+    position: relative;
+}
+
+footer {
+    font-size: 0.875rem;
 }

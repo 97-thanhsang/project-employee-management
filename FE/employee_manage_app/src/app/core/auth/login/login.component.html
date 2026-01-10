@@ -1,41 +1,45 @@
 <div class="container d-flex justify-content-center align-items-center vh-100 bg-light">
-  <div class="card shadow-lg p-4 w-100" style="max-width: 400px; border-radius: 15px;">
-    <div class="card-body">
-      <h2 class="text-center mb-4 text-primary fw-bold">Login</h2>
-      <p class="text-center text-muted mb-4">Welcome back! Please login to your account.</p>
-
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="email" class="form-label fw-semibold">Email Address</label>
-          <input type="email" class="form-control" id="email" formControlName="email" placeholder="name@example.com"
-            [class.is-invalid]="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
-          <div class="invalid-feedback" *ngIf="loginForm.get('email')?.hasError('required')">
-            Email is required.
-          </div>
-          <div class="invalid-feedback" *ngIf="loginForm.get('email')?.hasError('email')">
-            Please enter a valid email.
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="password" class="form-label fw-semibold">Password</label>
-          <input type="password" class="form-control" id="password" formControlName="password"
-            placeholder="Enter your password"
-            [class.is-invalid]="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
-          <div class="invalid-feedback" *ngIf="loginForm.get('password')?.hasError('required')">
-            Password is required.
-          </div>
-        </div>
-
-        <div class="d-grid gap-2 mt-4">
-          <button type="submit" class="btn btn-primary btn-lg" [disabled]="loginForm.invalid || isLoading">
-            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
-              aria-hidden="true"></span>
-            <span *ngIf="!isLoading">Login</span>
-            <span *ngIf="isLoading">Logging in...</span>
-          </button>
-        </div>
-      </form>
+  <nz-card [nzBordered]="false" class="shadow-lg p-3 w-100" style="max-width: 400px; border-radius: 12px;">
+    <div class="text-center mb-4">
+      <h2 class="text-primary fw-bold mb-2">Login</h2>
+      <p class="text-muted">Welcome back! Please login to your account.</p>
     </div>
-  </div>
+
+    <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()" nzLayout="vertical">
+      <nz-form-item class="mb-3">
+        <nz-form-label nzRequired nzFor="email" class="fw-semibold">Email Address</nz-form-label>
+        <nz-form-control [nzErrorTip]="emailErrorTpl">
+          <nz-input-group nzPrefixIcon="mail" class="shadow-sm">
+            <input type="email" nz-input formControlName="email" id="email" placeholder="name@example.com"
+              class="rounded-2" />
+          </nz-input-group>
+          <ng-template #emailErrorTpl let-control>
+            @if (control.hasError('required')) {
+            Email is required.
+            }
+            @if (control.hasError('email')) {
+            Please enter a valid email.
+            }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="mb-4">
+        <nz-form-label nzRequired nzFor="password" class="fw-semibold">Password</nz-form-label>
+        <nz-form-control [nzErrorTip]="'Password is required.'">
+          <nz-input-group nzPrefixIcon="lock" class="shadow-sm">
+            <input type="password" nz-input formControlName="password" id="password" placeholder="Enter your password"
+              class="rounded-2" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div class="d-grid">
+        <button nz-button nzType="primary" nzSize="large" [nzLoading]="isLoading" class="rounded-2 fw-bold shadow-sm"
+          [disabled]="loginForm.invalid || isLoading">
+          Login
+        </button>
+      </div>
+    </form>
+  </nz-card>
 </div>
