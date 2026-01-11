@@ -2,9 +2,8 @@ import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { DesignationStore } from '@features/employee-manage/data-access/store/designation/designation.store';
-import { DepartmentStore } from '@features/employee-manage/data-access/store/department/department.store';
 import { Designation } from '@features/employee-manage/data-access/models';
+import { DesignationFacade } from '@features/employee-manage/data-access/facades/designation.facade';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -34,16 +33,12 @@ import { DesignationTableComponent } from '../../../ui/designation/designation-t
   `]
 })
 export class DesignationListComponent implements OnInit {
-    store = inject(DesignationStore);
-    departmentStore = inject(DepartmentStore);
+    facade = inject(DesignationFacade);
     router = inject(Router);
 
     ngOnInit(): void {
-        this.store.loadDesignations();
-        // Ensure departments are loaded for the pipe to resolve names
-        if (!this.departmentStore.hasDepartments()) {
-            this.departmentStore.loadDepartments();
-        }
+        this.facade.loadDesignations();
+        this.facade.loadMasterData();
     }
 
     onEdit(id: number): void {
@@ -67,12 +62,12 @@ export class DesignationListComponent implements OnInit {
             reverseButtons: true
         }).then((result: any) => {
             if (result.isConfirmed) {
-                this.store.deleteDesignation(id);
+                this.facade.deleteDesignation(id);
             }
         });
     }
 
     onSelectDesignation(designation: Designation): void {
-        this.store.selectDesignation(designation);
+        this.facade.selectDesignation(designation);
     }
 }

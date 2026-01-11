@@ -88,28 +88,4 @@ export class EmployeeListComponent implements OnInit {
       }
     });
   }
-
-  /**
-   * Select nhân viên (để hiển thị chi tiết hoặc edit)
-   * @param employee Employee cần select
-   */
-  onSelectEmployee(employee: Employee): void {
-    this.facade.selectEmployee(employee);
-  }
-
-  /**
-   * Get designation name from ID
-   * Helper method để tìm designation name based on designationId
-   * @param designationId Designation ID
-   * @returns Designation name hoặc 'N/A'
-   */
-  getDesignationName(designationId: number): string {
-    const designation = this.facade.designations().find(d => d.designationId === designationId);
-    return designation ? designation.designationName : 'N/A';
-  }
-
-  getDepartmentName(departmentId: number): string {
-    const department = this.facade.departments().find(d => d.departmentId === departmentId);
-    return department ? department.departmentName : 'N/A';
-  }
 }

@@ -11,13 +11,23 @@ export class DesignationFacade {
     private readonly deptStore = inject(DepartmentStore);
 
     // ViewModel for Lists/Forms
-    readonly viewModel = computed(() => ({
-        designations: this.store.designations(),
-        isLoading: this.store.isLoading(),
-        error: this.store.error(),
-        selectedDesignation: this.store.selectedDesignation(),
-        departments: this.deptStore.departments()
-    }));
+    readonly viewModel = computed(() => {
+        const designations = this.store.designations();
+        const departments = this.deptStore.departments();
+
+        const mappedDesignations = designations.map(d => ({
+            ...d,
+            departmentName: departments.find(dept => dept.departmentId === d.departmentId)?.departmentName || 'N/A'
+        }));
+
+        return {
+            designations: mappedDesignations,
+            isLoading: this.store.isLoading(),
+            error: this.store.error(),
+            selectedDesignation: this.store.selectedDesignation(),
+            departments: this.deptStore.departments()
+        };
+    });
 
     loadDesignations(): void {
         this.store.loadDesignations();

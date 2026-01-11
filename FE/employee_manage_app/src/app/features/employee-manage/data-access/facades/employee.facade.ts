@@ -18,14 +18,34 @@ export class EmployeeFacade {
     private readonly _searchTerm = signal('');
 
     // ViewModel for Lists
-    readonly listViewModel = computed(() => ({
-        employees: this.store.employees(),
-        totalRequest: this.store.totalCount(), // Corrected from totalRequest
-        pageIndex: this._pageIndex(),
-        pageSize: this._pageSize(),
-        isLoading: this.store.isLoading(),
-        error: this.store.error()
-    }));
+    readonly listViewModel = computed(() => {
+        const employees = this.store.employees();
+        const depts = this.deptStore.departments();
+        const desigs = this.desigStore.designations();
+
+        const mappedEmployees = employees.map(emp => ({
+            ...emp,
+            departmentName: depts.find(d => d.departmentId === emp.designationId)?.departmentName || 'N/A', // Logic seems wrong in Pipe too, DesignationId used for Department? 
+            // WAIT, looking at DesignationNamePipe: const designation = designations.find(d => d.designationId === designationId);
+            // Employee has designationId. Designation has departmentId. 
+            // So Employee -> Designation -> Department. 
+            // The table shows "Chức vụ" (Designation). Does it show Department?
+            // Table columns: Name, Email, Phone, Designation, Actions.
+            // EmployeeTableComponent.html uses: {{ data.designationId | designationName: designations }}
+            // So I only need designationName for now.
+
+            designationName: desigs.find(d => d.designationId === emp.designationId)?.designationName || 'N/A'
+        }));
+
+        return {
+            employees: mappedEmployees,
+            totalRequest: this.store.totalCount(),
+            pageIndex: this._pageIndex(),
+            pageSize: this._pageSize(),
+            isLoading: this.store.isLoading(),
+            error: this.store.error()
+        };
+    });
 
     // ViewModel for Forms (Edit/Add)
     readonly formViewModel = computed(() => ({

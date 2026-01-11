@@ -15,3 +15,11 @@ export interface CreateDesignationRequest {
   departmentId: number;
   designationName: string;
 }
+
+/**
+ * Designation View Model (For UI Display)
+ * Includes computed properties like departmentName
+ */
+export interface DesignationViewModel extends Designation {
+  departmentName: string;
+}

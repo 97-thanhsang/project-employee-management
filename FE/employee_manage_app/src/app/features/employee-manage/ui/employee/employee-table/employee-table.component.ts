@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Employee, Designation } from '@features/employee-manage/data-access/models';
+import { Employee, Designation, EmployeeViewModel } from '@features/employee-manage/data-access/models';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -8,7 +8,6 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { HasRoleDirective } from '@shared/directives/has-role.directive';
-import { DesignationNamePipe } from '@shared/pipes';
 
 @Component({
     selector: 'app-employee-table',
@@ -21,8 +20,9 @@ import { DesignationNamePipe } from '@shared/pipes';
         NzIconModule,
         NzSpaceModule,
         NzTooltipModule,
-        HasRoleDirective,
-        DesignationNamePipe
+        NzSpaceModule,
+        NzTooltipModule,
+        HasRoleDirective
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './employee-table.component.html',
@@ -36,7 +36,7 @@ import { DesignationNamePipe } from '@shared/pipes';
   `]
 })
 export class EmployeeTableComponent {
-    @Input() employees: Employee[] = [];
+    @Input() employees: EmployeeViewModel[] = [];
     @Input() isLoading = false;
     @Input() totalCount = 0;
     @Input() designations: Designation[] = [];

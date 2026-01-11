@@ -9,7 +9,7 @@ Dưới đây là sự so sánh cụ thể dựa trên Project hiện tại củ
 | Level | Đặc điểm | Status hiện tại |
 | :--- | :--- | :--- |
 | **Good** | Tách biệt Logic khỏi UI. Store quản lý data, Component chỉ hiển thị. | ✅ Bạn đã làm được điều này với `EmployeeStore` và `EmployeeFormComponent`. |
-| **Excellent** | **Layered Architecture Strictness**. Chia rõ 4 tầng: <br>1. **Data Access Layer**: Chỉ gọi API (Service). <br>2. **State Layer**: Quản lý raw data (Store). <br>3. **Facade Layer**: Abstraction layer. UI không biết Store tồn tại. <br>4. **Feature/UI Layer**: Smart & Dumb Components. | 🟡 Bạn đang thiếu **Facade Layer**. Component vẫn gọi trực tiếp `store.addEmployee`. Nếu sau này đổi từ Signals sang NgRx, bạn phải sửa toàn bộ Component. |
+| **Excellent** | **Layered Architecture Strictness**. Chia rõ 4 tầng: <br>1. **Data Access Layer**: Chỉ gọi API (Service). <br>2. **State Layer**: Quản lý raw data (Store). <br>3. **Facade Layer**: Abstraction layer. UI không biết Store tồn tại. <br>4. **Feature/UI Layer**: Smart & Dumb Components. | ✅ **Hoàn thành**. Đã triển khai `EmployeeFacade` và `DesignationFacade`. Components hiện tại Dumb tuyệt đối (sử dụng ViewModel) và Smart Container chỉ gọi qua Facade. |
 
 ### 💡 The Facade Pattern (Cái bạn cần để đạt Excellent)
 Thay vì Component gọi Store:
@@ -29,14 +29,14 @@ this.employeeFacade.create(payload);
 | Level | Đặc điểm | Status hiện tại |
 | :--- | :--- | :--- |
 | **Good** | Component được chia nhỏ, tái sử dụng được (ví dụ `EmployeeForm`). | ✅ Code khá gọn. |
-| **Excellent** | **Strict Smart/Dumb Separation**. <br>- **Dumb Component (UI)**: Tuyệt đối KHÔNG inject Service/Store. Chỉ giao tiếp qua `@Input()` và `@Output()`. Thuần túy là giao diện. <br>- **Smart Component (Container)**: Inject Facade/Store, xử lý logic, và pass data xuống Dumb Component. | 🟡 `EmployeeFormComponent` hiện tại đang inject `Store` và tự load data (`loadMasterData`). Trong kiến trúc Excellent, nó nên là Dumb Component, nhận list Department từ cha (Smart Component). |
+| **Excellent** | **Strict Smart/Dumb Separation**. <br>- **Dumb Component (UI)**: Tuyệt đối KHÔNG inject Service/Store. Chỉ giao tiếp qua `@Input()` và `@Output()`. Thuần túy là giao diện. <br>- **Smart Component (Container)**: Inject Facade/Store, xử lý logic, và pass data xuống Dumb Component. | ✅ **Hoàn thành**. `EmployeeTable`, `EmployeeForm` đã chuyển thành Dumb Component. `EmployeeList` đóng vai trò Smart Component quản lý logic. |
 
 ## 3. Dependency Rules (Quy tắc phụ thuộc)
 
 | Level | Đặc điểm | Status hiện tại |
 | :--- | :--- | :--- |
 | **Good** | Thư mục gọn gàng, chia theo Feature. | ✅ `features/employee-manage`. |
-| **Excellent** | **Library Guidelines (Mental Model of Nx)**. <br> Quy định rõ: <br>- `feature` được import `ui` và `data-access`. <br>- `ui` KHÔNG ĐƯỢC import `feature`. <br>- `data-access` KHÔNG ĐƯỢC import `ui`. <br>- Tránh Circular Dependency tuyệt đối. | 🟡 Hiện tại chưa có cơ chế cưỡng chế (enforce) việc này (ví dụ `eslint-plugin-boundaries` hoặc Nx). Import path còn khá tự do. |
+| **Excellent** | **Library Guidelines (Mental Model of Nx)**. <br> Quy định rõ: <br>- `feature` được import `ui` và `data-access`. <br>- `ui` KHÔNG ĐƯỢC import `feature`. <br>- `data-access` KHÔNG ĐƯỢC import `ui`. <br>- Tránh Circular Dependency tuyệt đối. | ✅ **Hoàn thành**. Đã cấu trúc lại Project theo Vertical Slice. ViewModel moved vào Data Access. Pipes moved vào Feature UI. Imports đã được clean. |
 
 ## 4. Resilience & Global Handling (Sự kiên cường)
 
