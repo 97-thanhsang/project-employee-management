@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:4200",
+  "loginUser": "admin@gmail.com",
+  "loginPassword": "11111111",
+  "executionArgs": {
+    "projectName": "employee_manage_app",
+    "projectPath": "e:\\SOURCE\\project-employee-management\\FE\\employee_manage_app",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-F5bU-J25rVhvZmvelDBCLC2mPLkDLl7ks2yyVm8zx1x4s4gGAjEkksJyyMnmNjwEuvFxmyhF9t8TqnxpaB-mWcL9t_D8bqNK18ArW3S9XdJzhlj-XLW2KMYiEpwmUDmTUlg"
+    }
+  },
+  "proxy": "http://f55f2119-8502-4b9e-96c7-89cb8c5ccc8b:eTKMwg9YBwbMEdqqf52MKabuwADECFPC@tun.testsprite.com:8080"
+}

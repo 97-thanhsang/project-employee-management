@@ -1,0 +1,458 @@
+[
+  {
+    "id": "TC001",
+    "title": "Successful user login with valid credentials",
+    "description": "Verify that a user can login successfully using valid email and password and receives a secure JWT token.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter a valid registered email address and correct password."
+      },
+      {
+        "type": "action",
+        "description": "Click the login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure the user is authenticated, redirected to the appropriate dashboard, and a JWT token is securely issued."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Failed login with incorrect credentials",
+    "description": "Verify that login fails when using invalid email or password and a meaningful error message is displayed.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter an invalid email or incorrect password."
+      },
+      {
+        "type": "action",
+        "description": "Click the login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that login fails and a clear error notification is displayed to the user."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Role-based access control enforcement",
+    "description": "Verify that administrators have full access and standard users have read-only access to their profile only.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as administrator."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm full CRUD operations are accessible for employees, designations, and departments."
+      },
+      {
+        "type": "action",
+        "description": "Logout and login as a standard user."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm access is restricted to read-only profile view, with no access to management features."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Create new employee with valid details",
+    "description": "Verify that an administrator can create a new employee with all valid details including unique email and valid phone number and pincode.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as administrator and navigate to the employee creation form."
+      },
+      {
+        "type": "action",
+        "description": "Fill in employee details with unique email, valid phone number, designation, department, and valid pincode."
+      },
+      {
+        "type": "action",
+        "description": "Submit the form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the employee is successfully added to the list with correct details displayed."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Employee email validation for uniqueness",
+    "description": "Verify that creating or editing an employee with an already existing email results in a validation error.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to create a new employee using an email already existing in the system."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that a validation message prevents submission and informs about duplicate email."
+      },
+      {
+        "type": "action",
+        "description": "Edit an existing employee and change the email to another existing employee’s email."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the form shows a uniqueness validation error preventing saving."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Validation of phone number and pincode formats on employee form",
+    "description": "Ensure phone number and pincode input fields enforce correct format validation and prevent invalid data submission.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open employee creation or edit form."
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid phone number formats (e.g., letters, incomplete number)."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm validation error prevents form submission and displays appropriate messages."
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid pincodes (e.g., non-numeric, wrong length)."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm validation error is shown and form submission is blocked."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Employee deletion with confirmation prompt",
+    "description": "Verify that deleting an employee prompts for confirmation and upon confirmation deletes the employee record.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to employee list and select an employee to delete."
+      },
+      {
+        "type": "action",
+        "description": "Click the delete button."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a confirmation dialog appears requesting user confirmation."
+      },
+      {
+        "type": "action",
+        "description": "Confirm the deletion."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the employee record is removed from the list."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to delete again but cancel the confirmation."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the employee record remains unchanged."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "CRUD operations on designations",
+    "description": "Verify that administrators can create, read, update, and delete designations successfully with validated input.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the designation management section."
+      },
+      {
+        "type": "action",
+        "description": "Create a new designation with valid name."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that the new designation appears in the list."
+      },
+      {
+        "type": "action",
+        "description": "Edit an existing designation and save changes."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated designation name is reflected in the list."
+      },
+      {
+        "type": "action",
+        "description": "Delete a designation and confirm the confirmation prompt."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure the designation is removed from the list."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "CRUD operations on departments",
+    "description": "Verify that administrators can create, read, update, and delete departments successfully with validated input.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the department management section."
+      },
+      {
+        "type": "action",
+        "description": "Create a new department with valid details."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the new department is displayed in the list."
+      },
+      {
+        "type": "action",
+        "description": "Edit an existing department and save changes."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updated department details appear correctly."
+      },
+      {
+        "type": "action",
+        "description": "Delete a department and confirm removal on prompt."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the department is removed from the list."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Dashboard overview displays employee data snapshot",
+    "description": "Verify that the dashboard provides an accurate overview snapshot of employee data and loads within 2 seconds.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as administrator and navigate to the dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "Check the dashboard displays summarized employee metrics correctly."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure the dashboard loads completely within 2 seconds on desktop and mobile."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Standard user profile view and update request functionality",
+    "description": "Validate that standard users can view their profile and optionally request updates which are communicated correctly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a standard user."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the user profile view."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that user details are correctly displayed and no editing is allowed."
+      },
+      {
+        "type": "action",
+        "description": "Submit an update request if option is available."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the update request is submitted and confirmation feedback is given."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Secure logout terminates user session",
+    "description": "Verify that logging out invalidates the JWT token and redirects user to login page with no access to authenticated routes afterwards.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as any user."
+      },
+      {
+        "type": "action",
+        "description": "Click the logout button."
+      },
+      {
+        "type": "assertion",
+        "description": "Assert that the user is redirected to the login page and session token is invalidated."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access a secured page without logging in again."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied and user is redirected back to login."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "API token validation and protection",
+    "description": "Ensure all API requests require valid JWT tokens and reject unauthorized requests with clear error responses.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Make API requests to protected endpoints without a token."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the server responds with unauthorized error."
+      },
+      {
+        "type": "action",
+        "description": "Make API requests with an expired or invalid token."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the server rejects the request with appropriate authentication error."
+      },
+      {
+        "type": "action",
+        "description": "Make API requests with a valid token."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure the requests are processed successfully with expected data returned."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Responsive UI layout and performance on various devices",
+    "description": "Validate that the UI components render properly and respond correctly on desktop, tablet, and mobile devices with load times under 2 seconds.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the application on desktop viewport."
+      },
+      {
+        "type": "assertion",
+        "description": "Check UI is correctly laid out and load times are under 2 seconds."
+      },
+      {
+        "type": "action",
+        "description": "Repeat above step on tablet and mobile device viewports."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure UI adjusts responsively with no broken interactions and load times remain acceptable."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Password storage security compliance",
+    "description": "Verify that user passwords are stored securely in the backend using bcrypt or Argon2 hashing algorithms.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Create a test user with a known password."
+      },
+      {
+        "type": "action",
+        "description": "Access the user password storage location in database or backend."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm password is stored as a bcrypt or Argon2 hash and not in plain text."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Error handling notifications and modals",
+    "description": "Verify that application shows clear and descriptive notifications or modals on errors such as failed form submissions, API errors, or permission denials.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Trigger a form submission with invalid data (e.g., invalid phone number)."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure a clear validation error notification is displayed."
+      },
+      {
+        "type": "action",
+        "description": "Simulate an API error response."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is informed about the failure via notification or modal."
+      },
+      {
+        "type": "action",
+        "description": "Attempt an unauthorized action as a standard user."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm permission error feedback is shown to the user."
+      }
+    ]
+  }
+]
