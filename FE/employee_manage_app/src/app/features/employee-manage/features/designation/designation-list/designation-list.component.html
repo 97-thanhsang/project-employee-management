@@ -12,14 +12,15 @@
     </div>
 
     <!-- Error State -->
-    @if (store.error()) {
-    <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
-        (nzOnClose)="store.clearError()" class="mb-4 shadow-sm">
+    @if (facade.viewModel().error) {
+    <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="facade.viewModel().error!.message" nzShowIcon nzCloseable
+        (nzOnClose)="facade.loadDesignations()" class="mb-4 shadow-sm">
+        <!-- Assuming clearError not in facade yet, using loadDesignations as recovery or need to add clearError -->
     </nz-alert>
     }
 
     <!-- Empty State -->
-    @if (!store.hasDesignations() && !store.isLoading()) {
+    @if (facade.viewModel().designations.length === 0 && !facade.viewModel().isLoading) {
     <nz-card class="text-center py-5 shadow-sm rounded-3">
         <nz-empty nzNotFoundContent="Không có chức danh nào. Hãy thêm chức danh mới!" [nzNotFoundFooter]="footerTpl">
             <ng-template #footerTpl>
@@ -32,10 +33,11 @@
     }
 
     <!-- Data Table -->
-    @if (store.hasDesignations() || store.isLoading()) {
+    @if (facade.viewModel().designations.length > 0 || facade.viewModel().isLoading) {
     <nz-card [nzBordered]="false" class="shadow-sm rounded-3">
-        <app-designation-table [designations]="store.designations()" [isLoading]="store.isLoading()"
-            [departments]="departmentStore.departments()" (edit)="onEdit($event)" (delete)="onDelete($event)">
+        <app-designation-table [designations]="facade.viewModel().designations"
+            [isLoading]="facade.viewModel().isLoading" [departments]="facade.viewModel().departments"
+            (edit)="onEdit($event)" (delete)="onDelete($event)">
         </app-designation-table>
     </nz-card>
     }

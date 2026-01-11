@@ -56,3 +56,11 @@ export interface UpdateEmployeeRequest {
   modifiedDate: string;
 
 }
+
+/**
+ * Employee View Model (For UI Display)
+ * Includes computed properties like designationName
+ */
+export interface EmployeeViewModel extends Employee {
+  designationName: string;
+}

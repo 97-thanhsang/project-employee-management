@@ -40,28 +40,28 @@ This plan focuses exclusively on structural improvements: **Resilience**, **Isol
 **Status:** 🟢 Completed
 
 ### Tasks
-1. [ ] **Design Facade Interface**
-    - [ ] Define `EmployeeFacade` abstract class/interface.
-2. [ ] **Implement Facades**
-    - [ ] Create `EmployeeFacade` service (injects `EmployeeStore`).
-    - [ ] Create `DesignationFacade` service.
-3. [ ] **Migrate Containers**
-    - [ ] Update Containers to inject `Facade` instead of `Store`.
+1. [x] **Design Facade Interface**
+    - [x] Define `EmployeeFacade` abstract class/interface.
+2. [x] **Implement Facades**
+    - [x] Create `EmployeeFacade` service (injects `EmployeeStore`).
+    - [x] Create `DesignationFacade` service.
+3. [x] **Migrate Containers**
+    - [x] Update Containers to inject `Facade` instead of `Store`.
 
 ---
 
 ## 🧱 Phase 4: Boundary Enforcement
 **Objective:** Enforce strict dependency rules to prevent spaghetti code.
-**Status:** 🔴 Not Started
+**Status:** 🟢 Completed
 
 ### Tasks
-1. [ ] **Dependency Rule Config**
-    - [ ] Setup ESLint rules (if possible) or Documentation.
-    - [ ] Rule: `ui` cannot import `features`.
-    - [ ] Rule: `data-access` cannot import `ui`.
-2. [ ] **Audit & Fix**
-    - [ ] Scan codebase for violations.
-    - [ ] Fix circular dependencies.
+1. [x] **Dependency Rule Config**
+    - [x] Setup ESLint rules (if possible) or Documentation.
+    - [x] Rule: `ui` cannot import `features`.
+    - [x] Rule: `data-access` cannot import `ui`.
+2. [x] **Audit & Fix**
+    - [x] Scan codebase for violations.
+    - [x] Fix circular dependencies.
 
 ---
 
@@ -114,31 +114,31 @@ Kế hoạch này tập trung hoàn toàn vào việc cải thiện cấu trúc:
 
 ## 🎭 Phase 3: Lớp Trừu Tượng (Facade Pattern)
 **Mục tiêu:** Ẩn sự phức tạp của Quản lý Trạng thái (Signals/NgRx) khỏi Lớp Tính Năng (Feature Layer).
-**Trạng thái:** 🔴 Chưa bắt đầu
+**Trạng thái:** 🟢 Hoàn thành
 
 ### Nhiệm vụ
-1. [ ] **Thiết kế Interface Facade**
-    - [ ] Định nghĩa class/interface trừu tượng `EmployeeFacade`.
-2. [ ] **Triển khai Facades**
-    - [ ] Tạo service `EmployeeFacade` (inject `EmployeeStore`).
-    - [ ] Tạo service `DesignationFacade`.
-3. [ ] **Di chuyển Containers**
-    - [ ] Cập nhật Containers để inject `Facade` thay vì `Store`.
+1. [x] **Thiết kế Interface Facade**
+    - [x] Định nghĩa class/interface trừu tượng `EmployeeFacade`.
+2. [x] **Triển khai Facades**
+    - [x] Tạo service `EmployeeFacade` (inject `EmployeeStore`).
+    - [x] Tạo service `DesignationFacade`.
+3. [x] **Di chuyển Containers**
+    - [x] Cập nhật Containers để inject `Facade` thay vì `Store`.
 
 ---
 
 ## 🧱 Phase 4: Thực Thi Ranh Giới (Boundary Enforcement)
 **Mục tiêu:** Thực thi các quy tắc phụ thuộc nghiêm ngặt để ngăn chặn code rối (spaghetti code).
-**Trạng thái:** 🔴 Chưa bắt đầu
+**Trạng thái:** 🟢 Hoàn thành
 
 ### Nhiệm vụ
-1. [ ] **Cấu hình Quy Tắc Phụ Thuộc**
-    - [ ] Thiết lập quy tắc ESLint (nếu có thể) hoặc Tài liệu hóa.
-    - [ ] Quy tắc: `ui` không được import `features`.
-    - [ ] Quy tắc: `data-access` không được import `ui`.
-2. [ ] **Kiểm Tra & Sửa Lỗi**
-    - [ ] Quét codebase để tìm vi phạm.
-    - [ ] Sửa các phụ thuộc vòng (circular dependencies).
+1. [x] **Cấu hình Quy Tắc Phụ Thuộc**
+    - [x] Thiết lập quy tắc ESLint (nếu có thể) hoặc Tài liệu hóa.
+    - [x] Quy tắc: `ui` không được import `features`.
+    - [x] Quy tắc: `data-access` không được import `ui`.
+2. [x] **Kiểm Tra & Sửa Lỗi**
+    - [x] Quét codebase để tìm vi phạm.
+    - [x] Sửa các phụ thuộc vòng (circular dependencies).
 
 ---
 

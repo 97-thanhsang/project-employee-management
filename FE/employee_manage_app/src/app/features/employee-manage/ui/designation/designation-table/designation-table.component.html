@@ -11,9 +11,7 @@
         <tr>
             <td class="fw-semibold">{{ data.designationName }}</td>
             <td>
-                <ng-container *ngIf="departments as depts">
-                    {{ data.departmentId | departmentName: depts }}
-                </ng-container>
+                {{ data.departmentName }}
             </td>
             <td class="text-center">
                 <nz-space>
