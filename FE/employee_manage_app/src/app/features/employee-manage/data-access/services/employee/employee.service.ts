@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest } from '../models';
+import { Employee, CreateEmployeeRequest, UpdateEmployeeRequest } from '../../models';
 import { ApiResponse } from '@core/models/api-response.model';
-import { environment } from '../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 /**
  * EmployeeService

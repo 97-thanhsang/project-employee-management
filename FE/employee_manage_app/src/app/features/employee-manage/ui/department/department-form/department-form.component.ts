@@ -1,9 +1,7 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule, Router, ActivatedRoute } from '@angular/router';
-import { DepartmentStore } from '@features/employee-manage/store/department.store';
-import { CreateDepartmentRequest } from '@features/employee-manage/models';
+import { Department, CreateDepartmentRequest } from '@features/employee-manage/data-access/models';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -19,7 +17,6 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        RouterModule,
         NzFormModule,
         NzInputModule,
         NzButtonModule,
@@ -32,27 +29,32 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     templateUrl: './department-form.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DepartmentFormComponent implements OnInit {
-    store = inject(DepartmentStore);
-    formBuilder = inject(FormBuilder);
-    router = inject(Router);
-    route = inject(ActivatedRoute);
+export class DepartmentFormComponent implements OnInit, OnChanges {
+    @Input() department: Department | null = null;
+    @Input() isLoading = false;
+    @Input() error: any = null;
+    @Input() isEditMode = false;
+    @Output() save = new EventEmitter<CreateDepartmentRequest>();
+    @Output() cancel = new EventEmitter<void>();
 
+    formBuilder = inject(FormBuilder);
     form!: FormGroup;
-    isEditMode = false;
-    departmentId: number | null = null;
 
     ngOnInit(): void {
         this.initializeForm();
+    }
 
-        this.route.paramMap.subscribe(params => {
-            const id = params.get('id');
-            if (id) {
-                this.isEditMode = true;
-                this.departmentId = parseInt(id, 10);
-                this.loadDepartmentForEdit(this.departmentId);
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['department'] && this.form) {
+            if (this.department) {
+                this.form.patchValue({
+                    departmentName: this.department.departmentName,
+                    isActive: this.department.isActive
+                });
+            } else {
+                this.form.reset({ isActive: true });
             }
-        });
+        }
     }
 
     private initializeForm(): void {
@@ -62,44 +64,13 @@ export class DepartmentFormComponent implements OnInit {
         });
     }
 
-    private loadDepartmentForEdit(id: number): void {
-        this.store.loadDepartmentById(id);
-
-        // Timeout to wait for signal update (simple approach)
-        setTimeout(() => {
-            const selected = this.store.selectedDepartment();
-            if (selected) {
-                this.form.patchValue({
-                    departmentName: selected.departmentName,
-                    isActive: selected.isActive
-                });
-            }
-        }, 500);
-    }
-
     onSubmit(): void {
-        if (!this.form.valid || this.store.isCreating() || this.store.isUpdating()) {
-            return;
-        }
-
-        const formValue = this.form.value;
-        const payload: CreateDepartmentRequest = {
-            departmentName: formValue.departmentName,
-            isActive: formValue.isActive
-        };
-
-        const onSuccess = () => {
-            this.router.navigate(['/employee-manage/departments']);
-        };
-
-        if (this.isEditMode && this.departmentId) {
-            this.store.updateDepartment(this.departmentId, payload, onSuccess);
-        } else {
-            this.store.addDepartment(payload, onSuccess);
+        if (this.form.valid && !this.isLoading) {
+            this.save.emit(this.form.value);
         }
     }
 
     onCancel(): void {
-        this.router.navigate(['/employee-manage/departments']);
+        this.cancel.emit();
     }
 }

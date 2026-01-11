@@ -1,22 +1,18 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import Swal from 'sweetalert2';
-import { EmployeeStore } from '@features/employee-manage/store/employee.store';
-import { Employee, Designation } from '@features/employee-manage/models';
-import { HasRoleDirective } from '@shared/directives/has-role.directive';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzCardModule } from 'ng-zorro-antd/card';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { Employee } from '@features/employee-manage/data-access/models';
+import { EmployeeStore } from '@features/employee-manage/data-access/store/employee/employee.store';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
-import { NzSpaceModule } from 'ng-zorro-antd/space';
-import { DesignationNamePipe } from '@shared/pipes';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import Swal from 'sweetalert2';
+import { EmployeeTableComponent } from '../../../ui/employee/employee-table/employee-table.component';
 
 /**
  * EmployeeListComponent
@@ -38,10 +34,7 @@ import { DesignationNamePipe } from '@shared/pipes';
   imports: [
     CommonModule,
     RouterLink,
-    HasRoleDirective,
-    DesignationNamePipe,
     NzIconModule,
-    NzTableModule,
     NzTagModule,
     NzButtonModule,
     NzCardModule,
@@ -49,8 +42,7 @@ import { DesignationNamePipe } from '@shared/pipes';
     NzDividerModule,
     NzSpinModule,
     NzEmptyModule,
-    NzTooltipModule,
-    NzSpaceModule
+    EmployeeTableComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './employee-list.component.html',
@@ -58,12 +50,21 @@ import { DesignationNamePipe } from '@shared/pipes';
 })
 export class EmployeeListComponent implements OnInit {
   store = inject(EmployeeStore);
+  router = inject(Router);
 
   ngOnInit(): void {
     // Load danh sách nhân viên khi component init
     this.store.loadEmployees();
     // Load master data để có designations
     this.store.loadMasterData();
+  }
+
+  onEdit(id: number): void {
+    this.router.navigate(['/employee-manage/employees', id, 'edit']);
+  }
+
+  onDelete(event: { id: number; name: string }): void {
+    this.onDeleteEmployee(event.id, event.name);
   }
 
   /**

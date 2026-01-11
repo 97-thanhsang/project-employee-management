@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Department } from '@features/employee-manage/models';
+import { Department } from '@features/employee-manage/data-access/models';
 
 /**
  * DepartmentNamePipe

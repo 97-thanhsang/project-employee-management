@@ -1,0 +1,34 @@
+<nz-table #basicTable [nzData]="departments" [nzLoading]="isLoading" [nzPageSize]="10" nzShowSizeChanger>
+    <thead>
+        <tr>
+            <th>Tên Phòng Ban</th>
+            <th>Trạng Thái</th>
+            <th class="text-center">Thao Tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (data of basicTable.data; track data.departmentId) {
+        <tr>
+            <td class="fw-semibold">{{ data.departmentName }}</td>
+            <td>
+                <nz-tag [nzColor]="data.isActive ? 'success' : 'error'">
+                    {{ data.isActive ? 'Active' : 'Inactive' }}
+                </nz-tag>
+            </td>
+            <td class="text-center">
+                <nz-space>
+                    <button *nzSpaceItem [appHasRole]="'Admin'" (click)="onEdit(data.departmentId)" nz-button
+                        nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Sửa">
+                        <span nz-icon nzType="edit"></span>
+                    </button>
+                    <button *nzSpaceItem [appHasRole]="'Admin'"
+                        (click)="onDelete(data.departmentId, data.departmentName)" nz-button nzType="default" nzDanger
+                        nzShape="circle" nz-tooltip nzTooltipTitle="Xóa">
+                        <span nz-icon nzType="delete"></span>
+                    </button>
+                </nz-space>
+            </td>
+        </tr>
+        }
+    </tbody>
+</nz-table>

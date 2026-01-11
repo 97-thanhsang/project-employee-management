@@ -9,29 +9,29 @@ This plan focuses exclusively on structural improvements: **Resilience**, **Isol
 
 ## 🛡️ Phase 1: Resilience Foundation
 **Objective:** Centralize side-effects (Errors, Loading, Auth) to remove boilerplate from Stores/Components.
-**Status:** 🔴 Not Started
+**Status:** � Completed
 
 ### Tasks
-1. [ ] **Global HttpInterceptor** (`core/interceptors/api.interceptor.ts`)
-    - [ ] Auto-attach Bearer Token.
-    - [ ] Global Error Handling (401/403/500).
-    - [ ] Global Loading Indicator (NProgress/Spinner).
-2. [ ] **Error Handling Standardization**
-    - [ ] Ensure `AppError` is consistently used across all Services/Stores.
+1. [x] **Global HttpInterceptor** (`core/interceptors/api.interceptor.ts`)
+    - [x] Auto-attach Bearer Token.
+    - [x] Global Error Handling (401/403/500).
+    - [x] Global Loading Indicator (NProgress/Spinner).
+2. [x] **Error Handling Standardization**
+    - [x] Ensure `AppError` is consistently used across all Services/Stores.
 
 ---
 
 ## 🧩 Phase 2: Component Decoupling (Smart/Dumb)
 **Objective:** Isolate UI from Data Logic. Components must become "Dumb" (Pure UI), managed by "Smart" Containers.
-**Status:** 🔴 Not Started
+**Status:** 🟢 Completed
 
 ### Tasks
-1. [ ] **Refactor Employee Module**
-    - [ ] Convert `EmployeeFormComponent` to Dumb (Inputs/Outputs only, no Store injection).
-    - [ ] Create `EmployeeFromContainer` (Smart) to connect Store <-> Form.
-2. [ ] **Refactor Designation Module**
-    - [ ] Convert `DesignationFormComponent` to Dumb.
-    - [ ] Create `DesignationFormContainer` (Smart).
+1. [x] **Refactor Employee Module**
+    - [x] Convert `EmployeeFormComponent` to Dumb (Inputs/Outputs only, no Store injection).
+    - [x] Create `EmployeeFromContainer` (Smart) to connect Store <-> Form.
+2. [x] **Refactor Designation Module**
+    - [x] Convert `DesignationFormComponent` to Dumb.
+    - [x] Create `DesignationFormContainer` (Smart).
 
 ---
 
@@ -86,29 +86,29 @@ Kế hoạch này tập trung hoàn toàn vào việc cải thiện cấu trúc:
 
 ## 🛡️ Phase 1: Nền Tảng Kiên Cường (Resilience Foundation)
 **Mục tiêu:** Tập trung hóa các tác vụ phụ (Lỗi, Loading, Auth) để loại bỏ code lặp lại (boilerplate) trong Stores/Components.
-**Trạng thái:** 🔴 Chưa bắt đầu
+**Trạng thái:** � Hoàn thành
 
 ### Nhiệm vụ
-1. [ ] **Global HttpInterceptor** (`core/interceptors/api.interceptor.ts`)
-    - [ ] Tự động đính kèm Bearer Token.
-    - [ ] Xử lý lỗi toàn cục (401/403/500).
-    - [ ] Chỉ thị tải trang toàn cục (NProgress/Spinner).
-2. [ ] **Chuẩn hóa Xử Lý Lỗi**
-    - [ ] Đảm bảo `AppError` được sử dụng đồng nhất trên tất cả Services/Stores.
+1. [x] **Global HttpInterceptor** (`core/interceptors/api.interceptor.ts`)
+    - [x] Tự động đính kèm Bearer Token.
+    - [x] Xử lý lỗi toàn cục (401/403/500).
+    - [x] Chỉ thị tải trang toàn cục (NProgress/Spinner).
+2. [x] **Chuẩn hóa Xử Lý Lỗi**
+    - [x] Đảm bảo `AppError` được sử dụng đồng nhất trên tất cả Services/Stores.
 
 ---
 
 ## 🧩 Phase 2: Tách Biệt Component (Smart/Dumb)
 **Mục tiêu:** Cô lập UI khỏi Logic Dữ Liệu. Components phải trở thành "Dumb" (Chỉ thuần UI), được quản lý bởi "Smart" Containers.
-**Trạng thái:** 🔴 Chưa bắt đầu
+**Trạng thái:** 🟢 Hoàn thành
 
 ### Nhiệm vụ
-1. [ ] **Refactor Module Employee**
-    - [ ] Chuyển đổi `EmployeeFormComponent` thành Dumb (Chỉ Inputs/Outputs, không inject Store).
-    - [ ] Tạo `EmployeeFromContainer` (Smart) để kết nối Store <-> Form.
-2. [ ] **Refactor Module Designation**
-    - [ ] Chuyển đổi `DesignationFormComponent` thành Dumb.
-    - [ ] Tạo `DesignationFormContainer` (Smart).
+1. [x] **Refactor Module Employee**
+    - [x] Chuyển đổi `EmployeeFormComponent` thành Dumb (Chỉ Inputs/Outputs, không inject Store).
+    - [x] Tạo `EmployeeFromContainer` (Smart) để kết nối Store <-> Form.
+2. [x] **Refactor Module Designation**
+    - [x] Chuyển đổi `DesignationFormComponent` thành Dumb.
+    - [x] Tạo `DesignationFormContainer` (Smart).
 
 ---
 

@@ -1,10 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Input, Output, EventEmitter, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule, Router, ActivatedRoute } from '@angular/router';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { EmployeeStore } from '@features/employee-manage/store/employee.store';
-import { CreateEmployeeRequest, UpdateEmployeeRequest } from '@features/employee-manage/models';
+import { Employee, Department, Designation, CreateEmployeeRequest, UpdateEmployeeRequest } from '@features/employee-manage/data-access/models';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -20,7 +17,6 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule,
     NzFormModule,
     NzInputModule,
     NzSelectModule,
@@ -34,169 +30,131 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
   styleUrl: './employee-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmployeeFormComponent implements OnInit {
-  // Inject dependencies
-  store = inject(EmployeeStore);
+export class EmployeeFormComponent implements OnInit, OnChanges {
+  @Input() employee: Employee | null = null;
+  @Input() departments: Department[] = []; // If we need departments
+  @Input() designations: Designation[] = [];
+  @Input() isLoading = false;
+  @Input() isEditMode = false;
+
+  @Output() save = new EventEmitter<CreateEmployeeRequest | UpdateEmployeeRequest>();
+  @Output() cancelEdit = new EventEmitter<void>();
+
   formBuilder = inject(FormBuilder);
-  router = inject(Router);
-  route = inject(ActivatedRoute);
-
-  // Form & Mode
   form!: FormGroup;
-  isEditMode = false;
-  employeeId: number | null = null;
-
-
 
   ngOnInit(): void {
-    // Initialize form
     this.initializeForm();
-
-    // Load master data (departments, designations)
-    this.store.loadMasterData();
-
-    // Check if edit mode
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.isEditMode = true;
-        this.employeeId = parseInt(id, 10);
-        this.loadEmployeeForEdit(this.employeeId);
-      }
-    });
   }
 
-  /**
-   * Initialize reactive form with validators
-   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['employee'] && this.employee) {
+      this.patchForm(this.employee);
+    }
+  }
+
   private initializeForm(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      contactNo: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      contactNo: ['', [Validators.required, Validators.pattern(/^\\d{10}$/)]],
       address: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+      pincode: ['', [Validators.required, Validators.pattern(/^\\d{6}$/)]],
       designationId: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]], // Required for create, optional for update,
+      password: [''], // Required validation logic is dynamic
       createDate: [''],
       modifiedDate: ['']
     });
+
+    // Dynamic validator for password
+    this.form.get('password')?.setValidators(this.isEditMode ? [Validators.minLength(6)] : [Validators.required, Validators.minLength(6)]);
+    this.form.get('password')?.updateValueAndValidity();
   }
 
-  /**
-   * Load existing employee data for edit mode
-   * @param employeeId Employee ID
-   */
-  private loadEmployeeForEdit(employeeId: number): void {
-    this.store.loadEmployeeById(employeeId);
-
-    // After employee is loaded, patch form with the data
-    // Use a small timeout to ensure the signal has updated
-    setTimeout(() => {
-      const selectedEmployee = this.store.selectedEmployee();
-      if (selectedEmployee) {
-        this.form.patchValue({
-          employeeId: selectedEmployee.employeeId,
-          name: selectedEmployee.name,
-          email: selectedEmployee.email,
-          contactNo: selectedEmployee.contactNo,
-          address: selectedEmployee.address,
-          city: selectedEmployee.city,
-          state: selectedEmployee.state,
-          pincode: selectedEmployee.pincode,
-          designationId: selectedEmployee.designationId,
-          createDate: selectedEmployee.createDate,
-          modifiedDate: selectedEmployee.modifiedDate
-        });
-      }
-    }, 500);
+  private patchForm(emp: Employee): void {
+    if (!this.form) return;
+    this.form.patchValue({
+      name: emp.name,
+      email: emp.email,
+      contactNo: emp.contactNo,
+      address: emp.address,
+      city: emp.city,
+      state: emp.state,
+      pincode: emp.pincode,
+      designationId: emp.designationId,
+      createDate: emp.createDate,
+      modifiedDate: emp.modifiedDate
+    });
+    // Don't patch password
   }
 
-  /**
-   * Submit form (Create or Update)
-   */
   onSubmit(): void {
-    if (!this.form.valid || this.store.isCreating() || this.store.isUpdating()) {
+    if (this.form.invalid) {
+      Object.values(this.form.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
       return;
     }
 
     const formValue = this.form.value;
-    const currentDate = new Date().toISOString(); // ISO format: 2024-01-10T12:30:45.123Z
+    const currentDate = new Date().toISOString();
 
-    if (this.isEditMode && this.employeeId) {
-      const selectedEmployee = this.store.selectedEmployee();
-      // Update mode (password optional)
+    // Construct Payload
+    // Note: The Container handles ID logic. We just pass the data structure.
+    // However, to satisfy strict typing we might need to cast or form the object partially.
+    // Let's assume the Container knows current ID. We send what form has.
+
+    // Ideally we emit just the Form Value and Container maps it to Request models.
+    // But to match previous logic, we can construct the object here.
+
+    const baseData = {
+      name: formValue.name,
+      email: formValue.email,
+      contactNo: formValue.contactNo,
+      address: formValue.address,
+      city: formValue.city,
+      state: formValue.state,
+      pincode: formValue.pincode,
+      designationId: formValue.designationId,
+      password: formValue.password,
+      createDate: this.isEditMode ? formValue.createDate : currentDate,
+      modifiedDate: currentDate
+    };
+
+    if (this.isEditMode) {
+      // Update Payload
       const updatePayload: UpdateEmployeeRequest = {
-        employeeId: this.employeeId,
-        name: formValue.name,
-        email: formValue.email,
-        contactNo: formValue.contactNo,
-        address: formValue.address,
-        city: formValue.city,
-        state: formValue.state,
-        pincode: formValue.pincode,
-        designationId: formValue.designationId,
-        createDate: formValue.createDate,
-        modifiedDate: currentDate // Set to current date when updating
+        employeeId: this.employee?.employeeId || 0,
+        ...baseData
       };
+      // Remove password if empty in update (needs simple checks or container logic). 
+      // But interface expects it optional.
+      if (!baseData.password) delete updatePayload.password;
 
-      // Only include password if provided
-      if (formValue.password) {
-        updatePayload.password = formValue.password;
-      }
-
-      this.store.updateEmployee(this.employeeId, updatePayload, () => {
-        this.router.navigate(['/employee-manage/employees']);
-      });
+      this.save.emit(updatePayload);
     } else {
-      // Create mode (password required)
+      // Create Payload
       const createPayload: CreateEmployeeRequest = {
-        employeeId: 0, // Backend sẽ gán ID
-        name: formValue.name,
-        email: formValue.email,
-        contactNo: formValue.contactNo,
-        address: formValue.address,
-        city: formValue.city,
-        state: formValue.state,
-        pincode: formValue.pincode,
-        designationId: formValue.designationId,
-        password: formValue.password,
-        createDate: currentDate, // Set to current date when creating
-        modifiedDate: currentDate  // Set to current date when creating
+        employeeId: 0,
+        ...baseData
       };
-
-      this.store.addEmployee(createPayload, () => {
-        this.router.navigate(['/employee-manage/employees']);
-      });
+      this.save.emit(createPayload);
     }
   }
 
-  /**
-   * Go back to employee list
-   */
-  onCancel(): void {
-    this.router.navigate(['/employee-manage/employees']);
+  handleCancel(): void {
+    console.log('EmployeeFormComponent: Cancel clicked, emitting cancelEdit');
+    this.cancelEdit.emit();
   }
 
-  /**
-   * Helper to check if form control has error
-   * @param controlName Form control name
-   * @param errorType Error type (required, email, minLength, etc.)
-   * @returns boolean
-   */
+  // Helpers for template
   hasError(controlName: string, errorType: string): boolean {
     const control = this.form.get(controlName);
     return !!(control && control.hasError(errorType) && (control.dirty || control.touched));
-  }
-
-  /**
-   * Helper to get form control
-   * @param controlName Form control name
-   * @returns Form control
-   */
-  getControl(controlName: string) {
-    return this.form.get(controlName);
   }
 }

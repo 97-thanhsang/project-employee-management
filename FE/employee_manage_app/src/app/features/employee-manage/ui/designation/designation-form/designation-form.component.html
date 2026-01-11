@@ -12,9 +12,8 @@
                 </div>
 
                 <!-- Error State -->
-                @if (store.error()) {
-                <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
-                    (nzOnClose)="store.clearError()" class="mb-4">
+                @if (error) {
+                <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="error.message" nzShowIcon class="mb-4">
                 </nz-alert>
                 }
 
@@ -37,11 +36,10 @@
                     <nz-form-item>
                         <nz-form-label nzRequired nzFor="departmentId">Phòng Ban</nz-form-label>
                         <nz-form-control nzErrorTip="Vui lòng chọn phòng ban">
-                            <nz-select formControlName="departmentId" nzPlaceHolder="Chọn phòng ban"
-                                [nzLoading]="departmentStore.isLoading()">
-                                @for (dept of departmentStore.departments(); track dept.departmentId) {
-                                <nz-option [nzValue]="dept.departmentId" [nzLabel]="dept.departmentName"
-                                    [nzDisabled]="!dept.isActive"></nz-option>
+                            <nz-select formControlName="departmentId" id="departmentId" nzPlaceHolder="Chọn phòng ban">
+                                @for (dept of departments; track dept.departmentId) {
+                                <nz-option [nzValue]="dept.departmentId" [nzLabel]="dept.departmentName">
+                                </nz-option>
                                 }
                             </nz-select>
                         </nz-form-control>
@@ -49,13 +47,11 @@
 
                     <!-- Actions -->
                     <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
-                        <button nz-button nzType="default" type="button" (click)="onCancel()"
-                            [disabled]="store.isCreating() || store.isUpdating()">
+                        <button nz-button nzType="default" type="button" (click)="onCancel()" [disabled]="isLoading">
                             Hủy
                         </button>
-                        <button nz-button nzType="primary" type="submit"
-                            [nzLoading]="store.isCreating() || store.isUpdating()"
-                            [disabled]="store.isCreating() || store.isUpdating()">
+                        <button nz-button nzType="primary" type="submit" [nzLoading]="isLoading"
+                            [disabled]="!form.valid || isLoading">
                             {{ isEditMode ? 'Cập Nhật' : 'Thêm Mới' }}
                         </button>
                     </div>
