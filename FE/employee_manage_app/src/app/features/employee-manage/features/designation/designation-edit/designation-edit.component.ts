@@ -1,8 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DesignationStore } from '@features/employee-manage/data-access/store/designation/designation.store';
-import { DepartmentStore } from '@features/employee-manage/data-access/store/department/department.store';
+import { DesignationFacade } from '@features/employee-manage/data-access/facades/designation.facade';
 import { DesignationFormComponent } from '../../../ui/designation/designation-form/designation-form.component';
 import { CreateDesignationRequest } from '@features/employee-manage/data-access/models';
 
@@ -12,11 +11,11 @@ import { CreateDesignationRequest } from '@features/employee-manage/data-access/
     imports: [CommonModule, DesignationFormComponent],
     template: `
     <app-designation-form
-      [designation]="store.selectedDesignation()"
-      [departments]="departmentStore.departments()"
-      [isLoading]="store.isLoading()"
+      [designation]="facade.viewModel().selectedDesignation"
+      [departments]="facade.viewModel().departments"
+      [isLoading]="facade.viewModel().isLoading"
       [isEditMode]="isEditMode"
-      [error]="store.error()"
+      [error]="facade.viewModel().error"
       (save)="onSave($event)"
       (cancel)="onCancel()">
     </app-designation-form>
@@ -24,8 +23,7 @@ import { CreateDesignationRequest } from '@features/employee-manage/data-access/
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DesignationEditComponent implements OnInit {
-    store = inject(DesignationStore);
-    departmentStore = inject(DepartmentStore);
+    facade = inject(DesignationFacade);
     route = inject(ActivatedRoute);
     router = inject(Router);
 
@@ -33,20 +31,16 @@ export class DesignationEditComponent implements OnInit {
     designationId: number | null = null;
 
     ngOnInit(): void {
-
-        // Load departments
-        if (this.departmentStore.departments().length === 0) {
-            this.departmentStore.loadDepartments();
-        }
+        this.facade.loadMasterData();
 
         this.route.paramMap.subscribe(params => {
             const id = params.get('id');
             if (id) {
                 this.isEditMode = true;
                 this.designationId = parseInt(id, 10);
-                this.store.loadDesignationById(this.designationId);
+                this.facade.loadDesignationById(this.designationId);
             } else {
-                this.store.deselectDesignation();
+                this.facade.selectDesignation(null);
             }
         });
     }
@@ -57,11 +51,9 @@ export class DesignationEditComponent implements OnInit {
         };
 
         if (this.isEditMode && this.designationId) {
-            // Note: Update Logic needs ID but payload usually just has data.
-            // DesignationStore.updateDesignation signature: (id, payload, cb)
-            this.store.updateDesignation(this.designationId, payload, onSuccess);
+            this.facade.updateDesignation(this.designationId, payload as any, onSuccess);
         } else {
-            this.store.addDesignation(payload, onSuccess);
+            this.facade.createDesignation(payload, onSuccess);
         }
     }
 

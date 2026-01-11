@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DepartmentStore } from '@features/employee-manage/data-access/store/department/department.store';
+import { DepartmentFacade } from '@features/employee-manage/data-access/facades/department.facade';
 import { DepartmentFormComponent } from '../../../ui/department/department-form/department-form.component';
 import { CreateDepartmentRequest } from '@features/employee-manage/data-access/models';
 
@@ -11,9 +11,9 @@ import { CreateDepartmentRequest } from '@features/employee-manage/data-access/m
     imports: [CommonModule, DepartmentFormComponent],
     template: `
     <app-department-form
-      [department]="store.selectedDepartment()"
-      [isLoading]="store.isLoading()"
-      [error]="store.error()"
+      [department]="facade.viewModel().selectedDepartment"
+      [isLoading]="facade.viewModel().isLoading"
+      [error]="facade.viewModel().error"
       [isEditMode]="isEditMode"
       (save)="onSave($event)"
       (cancel)="onCancel()">
@@ -22,7 +22,7 @@ import { CreateDepartmentRequest } from '@features/employee-manage/data-access/m
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DepartmentEditComponent implements OnInit {
-    store = inject(DepartmentStore);
+    facade = inject(DepartmentFacade);
     route = inject(ActivatedRoute);
     router = inject(Router);
 
@@ -33,22 +33,22 @@ export class DepartmentEditComponent implements OnInit {
             const id = params.get('id');
             if (id) {
                 this.isEditMode = true;
-                this.store.loadDepartmentById(parseInt(id, 10));
+                this.facade.loadDepartmentById(parseInt(id, 10));
             } else {
                 this.isEditMode = false;
-                this.store.selectDepartment(null); // Clear selection for add mode
+                this.facade.selectDepartment(null); // Clear selection for add mode
             }
         });
     }
 
     onSave(payload: CreateDepartmentRequest): void {
-        const id = this.store.selectedDepartment()?.departmentId;
+        const id = this.facade.viewModel().selectedDepartment?.departmentId;
         const onSuccess = () => this.router.navigate(['/employee-manage/departments']);
 
         if (this.isEditMode && id) {
-            this.store.updateDepartment(id, payload, onSuccess);
+            this.facade.updateDepartment(id, payload, onSuccess);
         } else {
-            this.store.addDepartment(payload, onSuccess);
+            this.facade.createDepartment(payload, onSuccess);
         }
     }
 

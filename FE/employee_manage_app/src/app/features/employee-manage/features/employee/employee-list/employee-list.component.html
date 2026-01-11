@@ -12,14 +12,14 @@
   </div>
 
   <!-- Error State -->
-  @if (store.error()) {
-  <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
-    (nzOnClose)="store.clearError()" class="mb-4 shadow-sm">
+  @if (facade.listViewModel().error) {
+  <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="facade.listViewModel().error!.message" nzShowIcon
+    nzCloseable (nzOnClose)="facade.clearError()" class="mb-4 shadow-sm">
   </nz-alert>
   }
 
   <!-- Empty State -->
-  @if (!store.hasEmployees() && !store.isLoading()) {
+  @if (facade.listViewModel().employees.length === 0 && !facade.listViewModel().isLoading) {
   <nz-card class="text-center py-5 shadow-sm rounded-3">
     <nz-empty nzNotFoundContent="Không có dữ liệu nhân viên. Hãy thêm nhân viên mới!" [nzNotFoundFooter]="footerTpl">
       <ng-template #footerTpl>
@@ -32,10 +32,10 @@
   }
 
   <!-- Data Table -->
-  @if (store.hasEmployees() || store.isLoading()) {
+  @if (facade.listViewModel().employees.length > 0 || facade.listViewModel().isLoading) {
   <nz-card [nzBordered]="false" class="shadow-sm rounded-3">
-    <app-employee-table [employees]="store.employees()" [isLoading]="store.isLoading()"
-      [totalCount]="store.totalCount()" [designations]="store.designations()" (edit)="onEdit($event)"
+    <app-employee-table [employees]="facade.listViewModel().employees" [isLoading]="facade.listViewModel().isLoading"
+      [totalCount]="facade.listViewModel().totalRequest" [designations]="facade.designations()" (edit)="onEdit($event)"
       (delete)="onDelete($event)">
     </app-employee-table>
   </nz-card>

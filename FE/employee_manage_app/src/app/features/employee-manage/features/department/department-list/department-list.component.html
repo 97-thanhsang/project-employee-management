@@ -12,14 +12,14 @@
     </div>
 
     <!-- Error State -->
-    @if (store.error()) {
-    <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="store.error()!.message" nzShowIcon nzCloseable
-        (nzOnClose)="store.clearError()" class="mb-4 shadow-sm">
+    @if (facade.viewModel().error) {
+    <nz-alert nzType="error" nzMessage="Lỗi" [nzDescription]="facade.viewModel().error!.message" nzShowIcon nzCloseable
+        (nzOnClose)="facade.clearError()" class="mb-4 shadow-sm">
     </nz-alert>
     }
 
     <!-- Empty State -->
-    @if (!store.hasDepartments() && !store.isLoading()) {
+    @if (!facade.viewModel().departments.length && !facade.viewModel().isLoading) {
     <nz-card class="text-center py-5 shadow-sm rounded-3">
         <nz-empty nzNotFoundContent="Không có phòng ban nào. Hãy thêm phòng ban mới!" [nzNotFoundFooter]="footerTpl">
             <ng-template #footerTpl>
@@ -32,9 +32,9 @@
     }
 
     <!-- Data Table -->
-    @if (store.hasDepartments() || store.isLoading()) {
+    @if (facade.viewModel().departments.length || facade.viewModel().isLoading) {
     <nz-card [nzBordered]="false" class="shadow-sm rounded-3">
-        <app-department-table [departments]="store.departments()" [isLoading]="store.isLoading()"
+        <app-department-table [departments]="facade.viewModel().departments" [isLoading]="facade.viewModel().isLoading"
             (edit)="onEdit($event)" (delete)="onDelete($event)">
         </app-department-table>
     </nz-card>

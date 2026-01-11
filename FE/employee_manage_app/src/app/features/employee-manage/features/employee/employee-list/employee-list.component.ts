@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Employee } from '@features/employee-manage/data-access/models';
-import { EmployeeStore } from '@features/employee-manage/data-access/store/employee/employee.store';
+import { EmployeeFacade } from '@features/employee-manage/data-access/facades/employee.facade';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -49,14 +49,13 @@ import { EmployeeTableComponent } from '../../../ui/employee/employee-table/empl
   styleUrls: ['./employee-list.component.scss']
 })
 export class EmployeeListComponent implements OnInit {
-  store = inject(EmployeeStore);
+  facade = inject(EmployeeFacade);
   router = inject(Router);
 
   ngOnInit(): void {
-    // Load danh sách nhân viên khi component init
-    this.store.loadEmployees();
-    // Load master data để có designations
-    this.store.loadMasterData();
+    // Facade orchestrates loading employees and master data
+    this.facade.loadEmployees(1, 10);
+    this.facade.loadMasterData();
   }
 
   onEdit(id: number): void {
@@ -85,7 +84,7 @@ export class EmployeeListComponent implements OnInit {
       reverseButtons: true
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.store.deleteEmployee(employeeId);
+        this.facade.deleteEmployee(employeeId);
       }
     });
   }
@@ -95,7 +94,7 @@ export class EmployeeListComponent implements OnInit {
    * @param employee Employee cần select
    */
   onSelectEmployee(employee: Employee): void {
-    this.store.selectEmployee(employee);
+    this.facade.selectEmployee(employee);
   }
 
   /**
@@ -105,18 +104,12 @@ export class EmployeeListComponent implements OnInit {
    * @returns Designation name hoặc 'N/A'
    */
   getDesignationName(designationId: number): string {
-    const designation = this.store.designations().find(d => d.designationId === designationId);
+    const designation = this.facade.designations().find(d => d.designationId === designationId);
     return designation ? designation.designationName : 'N/A';
   }
 
-  /**
-   * Get department name from ID
-   * Helper method để tìm department name based on departmentId
-   * @param departmentId Department ID
-   * @returns Department name hoặc 'N/A'
-   */
   getDepartmentName(departmentId: number): string {
-    const department = this.store.departments().find(d => d.departmentId === departmentId);
+    const department = this.facade.departments().find(d => d.departmentId === departmentId);
     return department ? department.departmentName : 'N/A';
   }
 }

@@ -50,9 +50,10 @@ The frontend is built with **Angular 21**, emphasizing **Strict Mode** and **Sig
 
 - **Location**: [`./FE/employee_manage_app`](./FE/employee_manage_app)
 - **Key Features**:
-    - **Signal Store**: No NgRx boilerplate, just pure reactive signals.
-    - **Smart/Dumb Components**: Clear separation of UI and Logic.
-    - **Enterprise UX**: Skeleton loaders, Optimistic UI, Toasts.
+    - **Signal Store**: No Redux boilerplate, pure reactive signals.
+    - **Smart/Dumb Components (Refactored)**: Strict separation of UI (presentation) and Logic (data access). Phase 2 Completed.
+    - **Enterprise UX**: Skeleton loaders, Optimistic UI, Toasts with `ngx-toastr`.
+    - **Performance**: OnPush strategy everywhere, optimized bundle size.
 
 👉 **[Explore Frontend Documentation](./FE/employee_manage_app/README.md)**
 

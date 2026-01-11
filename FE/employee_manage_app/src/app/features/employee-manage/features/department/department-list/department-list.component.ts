@@ -2,7 +2,7 @@ import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router'; // Add Router
 import Swal from 'sweetalert2';
-import { DepartmentStore } from '@features/employee-manage/data-access/store/department/department.store';
+import { DepartmentFacade } from '@features/employee-manage/data-access/facades/department.facade';
 import { Department } from '@features/employee-manage/data-access/models';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -33,11 +33,11 @@ import { DepartmentTableComponent } from '../../../ui/department/department-tabl
   `]
 })
 export class DepartmentListComponent implements OnInit {
-    store = inject(DepartmentStore);
+    facade = inject(DepartmentFacade);
     router = inject(Router);
 
     ngOnInit(): void {
-        this.store.loadDepartments();
+        this.facade.loadDepartments();
     }
 
     onEdit(id: number): void {
@@ -61,12 +61,12 @@ export class DepartmentListComponent implements OnInit {
             reverseButtons: true
         }).then((result: any) => {
             if (result.isConfirmed) {
-                this.store.deleteDepartment(id);
+                this.facade.deleteDepartment(id);
             }
         });
     }
 
     onSelectDepartment(department: Department): void {
-        this.store.selectDepartment(department);
+        this.facade.selectDepartment(department);
     }
 }

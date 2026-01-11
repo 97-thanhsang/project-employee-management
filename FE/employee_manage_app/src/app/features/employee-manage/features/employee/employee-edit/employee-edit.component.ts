@@ -1,11 +1,9 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EmployeeStore } from '@features/employee-manage/data-access/store/employee/employee.store';
+import { EmployeeFacade } from '@features/employee-manage/data-access/facades/employee.facade';
 import { EmployeeFormComponent } from '../../../ui/employee/employee-form/employee-form.component';
-import { CreateEmployeeRequest, UpdateEmployeeRequest, Employee } from '@features/employee-manage/data-access/models';
-import { DepartmentStore } from '@features/employee-manage/data-access/store/department/department.store';
-import { DesignationStore } from '@features/employee-manage/data-access/store/designation/designation.store';
+import { CreateEmployeeRequest, UpdateEmployeeRequest } from '@features/employee-manage/data-access/models';
 
 @Component({
     selector: 'app-employee-edit',
@@ -13,11 +11,12 @@ import { DesignationStore } from '@features/employee-manage/data-access/store/de
     imports: [CommonModule, EmployeeFormComponent],
     template: `
     <app-employee-form
-      [employee]="store.selectedEmployee()"
-      [departments]="deptStore.departments()"
-      [designations]="desigStore.designations()"
-      [isLoading]="store.isLoading()"
+      [employee]="facade.formViewModel().selectedEmployee"
+      [departments]="facade.formViewModel().departments"
+      [designations]="facade.formViewModel().designations"
+      [isLoading]="facade.formViewModel().isLoading"
       [isEditMode]="isEditMode()"
+      [error]="facade.formViewModel().error"
       (save)="onSave($event)"
       (cancelEdit)="onCancel()">
     </app-employee-form>
@@ -25,51 +24,46 @@ import { DesignationStore } from '@features/employee-manage/data-access/store/de
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeEditComponent implements OnInit {
-    store = inject(EmployeeStore);
-    deptStore = inject(DepartmentStore);
-    desigStore = inject(DesignationStore);
+    facade = inject(EmployeeFacade);
     route = inject(ActivatedRoute);
     router = inject(Router);
 
     isEditMode = signal(false);
     employeeId: number | null = null;
 
+    // We can access ViewModel via facade.formViewModel()
+    // Template needs: employee, departments, designations, isLoading, isEditMode, error
+    // In template: [employee]="facade.formViewModel().selectedEmployee"
+
     ngOnInit(): void {
-        // Load master data via their respective stores
-        this.deptStore.loadDepartments();
-        this.desigStore.loadDesignations();
+        this.facade.loadMasterData();
 
         this.route.paramMap.subscribe(params => {
             const id = params.get('id');
             if (id) {
                 this.isEditMode.set(true);
                 this.employeeId = parseInt(id, 10);
-                this.store.loadEmployeeById(this.employeeId);
+                this.facade.loadEmployeeById(this.employeeId);
             } else {
                 this.isEditMode.set(false);
-                this.store.deselectEmployee();
+                this.facade.selectEmployee(null);
             }
         });
     }
 
     onSave(payload: CreateEmployeeRequest | UpdateEmployeeRequest): void {
+        const onSuccess = () => {
+            this.router.navigate(['/employee-manage/employees']);
+        };
+
         if (this.isEditMode() && this.employeeId) {
-            this.store.updateEmployee(this.employeeId, payload as UpdateEmployeeRequest, () => {
-                this.router.navigate(['/employee-manage/employees']);
-            });
+            this.facade.updateEmployee(this.employeeId, payload as UpdateEmployeeRequest, onSuccess);
         } else {
-            this.store.addEmployee(payload as CreateEmployeeRequest, () => {
-                this.router.navigate(['/employee-manage/employees']);
-            });
+            this.facade.createEmployee(payload as CreateEmployeeRequest, onSuccess);
         }
     }
+
     onCancel(): void {
-        console.log('EmployeeEditComponent: Cancel signal received, navigating...');
-        // debugger;
-        this.router.navigate(['/employee-manage/employees']).then(success => {
-            console.log('Navigation success:', success);
-        }).catch(err => {
-            console.error('Navigation error:', err);
-        });
+        this.router.navigate(['/employee-manage/employees']);
     }
 }
