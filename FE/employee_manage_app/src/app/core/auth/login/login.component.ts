@@ -52,7 +52,6 @@ export class LoginComponent {
                         this.router.navigate(['/dashboard']);
                     },
                     error: (err) => {
-                        debugger;
                         this.isLoading = false;
                         this.cdr.detectChanges(); // Force check to resolve NG0100
 

@@ -36,6 +36,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
   @Input() designations: Designation[] = [];
   @Input() isLoading = false;
   @Input() isEditMode = false;
+  @Input() error: any = null;
 
   @Output() save = new EventEmitter<CreateEmployeeRequest | UpdateEmployeeRequest>();
   @Output() cancelEdit = new EventEmitter<void>();
@@ -48,6 +49,9 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isEditMode']) {
+      this.updatePasswordValidators();
+    }
     if (changes['employee'] && this.employee) {
       this.patchForm(this.employee);
     }
@@ -57,11 +61,11 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      contactNo: ['', [Validators.required, Validators.pattern(/^\\d{10}$/)]],
+      contactNo: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       address: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      pincode: ['', [Validators.required, Validators.pattern(/^\\d{6}$/)]],
+      pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
       designationId: ['', Validators.required],
       password: [''], // Required validation logic is dynamic
       createDate: [''],
@@ -69,8 +73,19 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
     });
 
     // Dynamic validator for password
-    this.form.get('password')?.setValidators(this.isEditMode ? [Validators.minLength(6)] : [Validators.required, Validators.minLength(6)]);
-    this.form.get('password')?.updateValueAndValidity();
+    this.updatePasswordValidators();
+  }
+
+  private updatePasswordValidators(): void {
+    if (!this.form) return;
+    const passwordControl = this.form.get('password');
+    if (passwordControl) {
+      const validators = this.isEditMode
+        ? [Validators.minLength(6)]
+        : [Validators.required, Validators.minLength(6)];
+      passwordControl.setValidators(validators);
+      passwordControl.updateValueAndValidity();
+    }
   }
 
   private patchForm(emp: Employee): void {

@@ -3,15 +3,15 @@
 **Goal:** Hide state management implementation details (Signals/NgRx) from the Feature Layer.
 
 ## Checklist
-- [ ] **Create EmployeeFacade**
-    - [ ] Path: `features/employee-manage/facades/employee.facade.ts`.
-    - [ ] Expose `viewModel$` (combining Employees, Loading, Errors).
-    - [ ] Expose methods: `load()`, `create()`, `update()`, `delete()`.
-- [ ] **Refactor Feature Containers**
-    - [ ] `EmployeeListContainer`: Inject `EmployeeFacade` instead of `EmployeeStore`.
-    - [ ] `EmployeeFormContainer`: Inject `EmployeeFacade`.
-- [ ] **Repeat for Designation**
-    - [ ] Create `DesignationFacade`.
+- [x] **Create EmployeeFacade**
+    - [x] Path: `features/employee-manage/facades/employee.facade.ts`.
+    - [x] Expose `viewModel$` (combining Employees, Loading, Errors).
+    - [x] Expose methods: `load()`, `create()`, `update()`, `delete()`.
+- [x] **Refactor Feature Containers**
+    - [x] `EmployeeListContainer`: Inject `EmployeeFacade` instead of `EmployeeStore`.
+    - [x] `EmployeeFormContainer`: Inject `EmployeeFacade`.
+- [x] **Repeat for Designation**
+    - [x] Create `DesignationFacade`.
 
 ---
 
