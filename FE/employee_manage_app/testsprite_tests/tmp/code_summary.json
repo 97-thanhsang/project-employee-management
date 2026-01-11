@@ -1,0 +1,64 @@
+{
+    "tech_stack": [
+        "TypeScript",
+        "Angular",
+        "Bootstrap",
+        "NG-Zorro Antd",
+        "RxJS",
+        "Vitest"
+    ],
+    "features": [
+        {
+            "name": "Authentication",
+            "description": "User login functionality to access the application.",
+            "files": [
+                "src/app/core/auth/login/login.component.ts",
+                "src/app/core/auth/login/login.component.html"
+            ]
+        },
+        {
+            "name": "Employee Management",
+            "description": "CRUD operations for managing employees, including listing, adding, and editing employee details.",
+            "files": [
+                "src/app/features/employee-manage/features/employee/employee-list/employee-list.component.ts",
+                "src/app/features/employee-manage/features/employee/employee-edit/employee-edit.component.ts",
+                "src/app/features/employee-manage/ui/employee/employee-table/employee-table.component.ts",
+                "src/app/features/employee-manage/ui/employee/employee-form/employee-form.component.ts",
+                "src/app/features/employee-manage/data-access/store/employee/employee.store.ts",
+                "src/app/features/employee-manage/data-access/services/employee/employee.service.ts"
+            ]
+        },
+        {
+            "name": "Department Management",
+            "description": "CRUD operations for managing departments.",
+            "files": [
+                "src/app/features/employee-manage/features/department/department-list/department-list.component.ts",
+                "src/app/features/employee-manage/features/department/department-edit/department-edit.component.ts",
+                "src/app/features/employee-manage/ui/department/department-table/department-table.component.ts",
+                "src/app/features/employee-manage/ui/department/department-form/department-form.component.ts",
+                "src/app/features/employee-manage/data-access/store/department/department.store.ts",
+                "src/app/features/employee-manage/data-access/services/department/department.service.ts"
+            ]
+        },
+        {
+            "name": "Designation Management",
+            "description": "CRUD operations for managing designations.",
+            "files": [
+                "src/app/features/employee-manage/features/designation/designation-list/designation-list.component.ts",
+                "src/app/features/employee-manage/features/designation/designation-edit/designation-edit.component.ts",
+                "src/app/features/employee-manage/ui/designation/designation-table/designation-table.component.ts",
+                "src/app/features/employee-manage/ui/designation/designation-form/designation-form.component.ts",
+                "src/app/features/employee-manage/data-access/store/designation/designation.store.ts",
+                "src/app/features/employee-manage/data-access/services/designation/designation.service.ts"
+            ]
+        },
+        {
+            "name": "Overview",
+            "description": "Dashboard overview of the employee management system.",
+            "files": [
+                "src/app/features/employee-manage/features/overview/overview.component.ts",
+                "src/app/features/employee-manage/data-access/services/overview.service.ts"
+            ]
+        }
+    ]
+}
